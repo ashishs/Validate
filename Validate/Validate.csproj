@@ -44,7 +44,9 @@
     <Compile Include="GenericX.cs" />
     <Compile Include="StringX.cs" />
     <Compile Include="ValidationError.cs" />
+    <Compile Include="ValidationException.cs" />
     <Compile Include="ValidationOptions.cs" />
+    <Compile Include="ValidationResultToExceptionTransformer.cs" />
     <Compile Include="Validator.cs" />
     <Compile Include="ValidatorX.cs" />
   </ItemGroup>

@@ -46,6 +46,7 @@
     <Compile Include="Person.cs" />
     <Compile Include="ValidatorTestsForSimpleValidations.cs" />
     <Compile Include="ValidatorTestsForAggregateValidations.cs" />
+    <Compile Include="ValidatorTestsForValidationExceptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\nunit.framework.dll" />

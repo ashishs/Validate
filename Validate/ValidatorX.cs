@@ -7,13 +7,13 @@ namespace Validate
 {
     public static class ValidatorX
     {
-        public static Validator<T> IsNotNull<T, U>(this Validator<T> validator, Func<T, U> selector, string message) where U: class 
+        public static Validator<T> IsNotNull<T, U>(this Validator<T> validator, Func<T, U> selector, string message) where U : class
         {
             Func<Validator<T>> validation = () =>
                 {
                     var target = selector(validator.Target);
                     if (target == null)
-                        validator.Errors.Add(new ValidationError(message, target, cause: message));
+                        validator.AddError(new ValidationError(message, target, cause: message));
                     return validator;
                 };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -25,7 +25,7 @@ namespace Validate
             {
                 var target = selector(validator.Target);
                 if (target != null)
-                    validator.Errors.Add(new ValidationError(message, target, cause: message));
+                    validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -37,7 +37,7 @@ namespace Validate
             {
                 var target = selector(validator.Target);
                 if (!target.Equals(equalTo))
-                    validator.Errors.Add(new ValidationError(message, target, cause: message));
+                    validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -49,7 +49,7 @@ namespace Validate
             {
                 var target = selector(validator.Target);
                 if (target.Equals(equalTo))
-                    validator.Errors.Add(new ValidationError(message, target, cause: message));
+                    validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -61,7 +61,7 @@ namespace Validate
             {
                 var target = selector(validator.Target);
                 if (target.CompareTo(greaterThanValue) <= 0)
-                    validator.Errors.Add(new ValidationError(message, target, cause: message));
+                    validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -73,7 +73,7 @@ namespace Validate
             {
                 var target = selector(validator.Target);
                 if (target.CompareTo(lesserThanValue) >= 0)
-                    validator.Errors.Add(new ValidationError(message, target, cause: message));
+                    validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -85,7 +85,7 @@ namespace Validate
             {
                 var target = selector(validator.Target);
                 if (target.CompareTo(lesserThanOrEqualToValue) > 0 || target.CompareTo(greaterThanOrEqualToValue) < 0)
-                    validator.Errors.Add(new ValidationError(message, target, cause: message));
+                    validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -97,7 +97,7 @@ namespace Validate
             {
                 var target = selector(validator.Target);
                 if (target.CompareTo(lesserThanOrEqualToValue) <= 0 && target.CompareTo(greaterThanOrEqualToValue) >= 0)
-                    validator.Errors.Add(new ValidationError(message, target, cause: message));
+                    validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -109,7 +109,7 @@ namespace Validate
             {
                 var target = validator.Target;
                 if (!predicate(target))
-                    validator.Errors.Add(new ValidationError(message, target, cause: message));
+                    validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -121,7 +121,7 @@ namespace Validate
             {
                 var target = validator.Target;
                 if (predicate(target))
-                    validator.Errors.Add(new ValidationError(message, target, cause: message));
+                    validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -131,9 +131,9 @@ namespace Validate
         {
             Func<Validator<T>> validation = () =>
             {
-                var match =  validators.Any(v => v.IsValid);
-                if(!match)
-                    validator.Errors.Add(new ValidationError(message, validator.Target, cause: GetCauses(validators).Join(" And ")));
+                var match = validators.Any(v => v.IsValid);
+                if (!match)
+                    validator.AddError(new ValidationError(message, validator.Target, cause: GetCauses(validators).Join(" And ")));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -145,7 +145,7 @@ namespace Validate
             {
                 var match = validators.All(v => v.IsValid);
                 if (!match)
-                    validator.Errors.Add(new ValidationError(message, validator.Target, cause: GetCauses(validators).Join(" Or ")));
+                    validator.AddError(new ValidationError(message, validator.Target, cause: GetCauses(validators).Join(" Or ")));
                 return validator;
             };
             return validation.ExecuteInValidationBlock(validator, message);
@@ -155,8 +155,8 @@ namespace Validate
         {
             Func<Validator<T>> validation = () =>
             {
-                if(ifThis(validator.Target) && predicates.Select(p => p).FirstOrDefault(p => !p(validator.Target)) != null)
-                    validator.Errors.Add(new ValidationError(message, validator.Target, cause: message));
+                if (ifThis(validator.Target) && predicates.Select(p => p).FirstOrDefault(p => !p(validator.Target)) != null)
+                    validator.AddError(new ValidationError(message, validator.Target, cause: message));
                 return validator;
 
             };
@@ -168,11 +168,17 @@ namespace Validate
             Func<Validator<T>> validation = () =>
             {
                 if (!ifThis(validator.Target) && predicates.Select(p => p).FirstOrDefault(p => !p(validator.Target)) != null)
-                    validator.Errors.Add(new ValidationError(message, validator.Target, cause: message));
+                    validator.AddError(new ValidationError(message, validator.Target, cause: message));
                 return validator;
 
             };
             return validation.ExecuteInValidationBlock(validator, message);
+        }
+
+        public static void Throw(this Validator validator)
+        {
+            if(!validator.IsValid)
+                validator.ValidationResultToExceptionTransformer.Throw();
         }
 
         private static List<string> GetCauses(IEnumerable<Validator> validators)
@@ -186,11 +192,11 @@ namespace Validate
             {
                 return validator.ValidateFurther ? func() : validator;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                validator.Errors.Add(new ValidationError(message, validator.Target, cause: message));
-                return validator;
+                validator.AddError(new ValidationError(message, validator.Target, cause: "{{{0} : Exception : {1}}}".WithFormat(message, ex.ToString())));
             }
+            return validator;
         }
     }
 }
