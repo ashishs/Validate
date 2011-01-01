@@ -1,0 +1,13 @@
+*.cache
+*.suo
+*.csproj.user
+_ReSharper*/
+*.reshaper.user
+bin/
+debug/
+obj/
+*.log
+*ReSharper*
+App.config
+version.txt
+.hg/

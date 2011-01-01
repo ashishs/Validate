@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validate", "Validate\Validate.csproj", "{8F6A102A-7DFD-4876-9E07-0F798D1AA72D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validate.UnitTests", "Validate.UnitTests\Validate.UnitTests.csproj", "{AE6FAED1-9C68-4671-9141-7A24897C3C8A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F6A102A-7DFD-4876-9E07-0F798D1AA72D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6A102A-7DFD-4876-9E07-0F798D1AA72D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F6A102A-7DFD-4876-9E07-0F798D1AA72D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F6A102A-7DFD-4876-9E07-0F798D1AA72D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE6FAED1-9C68-4671-9141-7A24897C3C8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE6FAED1-9C68-4671-9141-7A24897C3C8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE6FAED1-9C68-4671-9141-7A24897C3C8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE6FAED1-9C68-4671-9141-7A24897C3C8A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
