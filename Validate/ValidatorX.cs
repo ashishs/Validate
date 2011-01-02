@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace Validate
 {
+    /// <summary>
+    /// Validator extension methods.
+    /// </summary>
     public static class ValidatorX
     {
         public static Validator<T> IsNotNull<T, U>(this Validator<T> validator, Func<T, U> selector, string message) where U : class
@@ -19,12 +23,36 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
+        public static Validator<T> IsNotNullOrEmpty<T, U>(this Validator<T> validator, Func<T, U> selector, string message) where U : IEnumerable
+        {
+            Func<Validator<T>> validation = () =>
+            {
+                var target = selector(validator.Target);
+                if (target == null || target.OfType<object>().Count() == 0)
+                    validator.AddError(new ValidationError(message, target, cause: message));
+                return validator;
+            };
+            return validation.ExecuteInValidationBlock(validator, message);
+        }
+
         public static Validator<T> IsNull<T, U>(this Validator<T> validator, Func<T, U> selector, string message) where U : class
         {
             Func<Validator<T>> validation = () =>
             {
                 var target = selector(validator.Target);
                 if (target != null)
+                    validator.AddError(new ValidationError(message, target, cause: message));
+                return validator;
+            };
+            return validation.ExecuteInValidationBlock(validator, message);
+        }
+
+        public static Validator<T> IsNullOrEmpty<T, U>(this Validator<T> validator, Func<T, U> selector, string message) where U : IEnumerable
+        {
+            Func<Validator<T>> validation = () =>
+            {
+                var target = selector(validator.Target);
+                if (!(target == null || target.OfType<object>().Count() == 0))
                     validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
@@ -43,12 +71,12 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
-        public static Validator<T> IsNotEqualTo<T, U>(this Validator<T> validator, Func<T, U> selector, U equalTo, string message)
+        public static Validator<T> IsNotEqualTo<T, U>(this Validator<T> validator, Func<T, U> selector, U notEqualTo, string message)
         {
             Func<Validator<T>> validation = () =>
             {
                 var target = selector(validator.Target);
-                if (target.Equals(equalTo))
+                if (target.Equals(notEqualTo))
                     validator.AddError(new ValidationError(message, target, cause: message));
                 return validator;
             };
@@ -163,12 +191,38 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
+        public static Validator<T> IfThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Validator[] validators)
+        {
+            Func<Validator<T>> validation = () =>
+            {
+                var match = ifThis(validator.Target);
+                if (match && validators.Any(v => !v.IsValid))
+                    validator.AddError(new ValidationError(message, validator.Target, cause: GetCauses(validators).Join(" ")));
+                return validator;
+
+            };
+            return validation.ExecuteInValidationBlock(validator, message);
+        }
+
         public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Predicate<T>[] predicates)
         {
             Func<Validator<T>> validation = () =>
             {
                 if (!ifThis(validator.Target) && predicates.Select(p => p).FirstOrDefault(p => !p(validator.Target)) != null)
                     validator.AddError(new ValidationError(message, validator.Target, cause: message));
+                return validator;
+
+            };
+            return validation.ExecuteInValidationBlock(validator, message);
+        }
+
+        public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Validator[] validators)
+        {
+            Func<Validator<T>> validation = () =>
+            {
+                var match = ifThis(validator.Target);
+                if (!match && validators.Any(v => !v.IsValid))
+                    validator.AddError(new ValidationError(message, validator.Target, cause: GetCauses(validators).Join(" ")));
                 return validator;
 
             };
@@ -198,5 +252,10 @@ namespace Validate
             }
             return validator;
         }
+    }
+
+    public static class ValidatorBuilderX
+    {
+        
     }
 }

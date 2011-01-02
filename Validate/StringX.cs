@@ -6,6 +6,9 @@ namespace Validate
 {
     public static class StringX
     {
+        /// <summary>
+        /// Joins multiple strings together using a separator
+        /// </summary>
         public static string Join(this IEnumerable<string > enumerable, string separator)
         {
             if (enumerable.IsNullOrEmpty())

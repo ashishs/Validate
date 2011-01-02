@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Examples\ContactBuilder.cs" />
+    <Compile Include="Examples\Contract.cs" />
+    <Compile Include="Examples\ValidationExamples_1.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="ValidatorTestsForSimpleValidations.cs" />
     <Compile Include="ValidatorTestsForAggregateValidations.cs" />

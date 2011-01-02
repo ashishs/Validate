@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Validate
 {
+    /// <summary>
+    /// Interface implemented by Validator abstract base class
+    /// </summary>
     public interface IValidator
     {
         bool IsValid { get; }
@@ -13,6 +16,9 @@ namespace Validate
 
     }
 
+    /// <summary>
+    /// The base class for all validators
+    /// </summary>
     public abstract class Validator : IValidator
     {
         public abstract bool IsValid { get; }
@@ -22,6 +28,10 @@ namespace Validate
         public abstract ValidationResultToExceptionTransformer ValidationResultToExceptionTransformer { get; }
     }
 
+    /// <summary>
+    /// Object validator. This implementation can be chained using the extension methods in the validatorX class.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Validator<T> : Validator
     {
         public T Target { get; private set; }
@@ -46,6 +56,9 @@ namespace Validate
 
         public override ValidationResultToExceptionTransformer ValidationResultToExceptionTransformer { get { return options.ValidationResultToExceptionTransformer; } }
 
+        /// <summary>
+        /// Returns true if the object being validated is valid, false otherwise.
+        /// </summary>
         public override bool IsValid
         {
             get
