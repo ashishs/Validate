@@ -167,6 +167,14 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
+        /// <summary>
+        /// This method should only be used while writing custom validators. It cannot be used with Validation.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="validator"></param>
+        /// <param name="message"></param>
+        /// <param name="validators"></param>
+        /// <returns></returns>
         public static Validator<T> Or<T>(this Validator<T> validator, string message, params Validator[] validators)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>
@@ -179,7 +187,7 @@ namespace Validate
             validator.AddValidation(validation, message);
             return validation.ExecuteInValidationBlock(validator, message);
         }
-
+        
         public static Validator<T> Or<T>(this Validator<T> validator, string message, params Predicate<T>[] predicates)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>
@@ -193,6 +201,14 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
+        /// <summary>
+        /// This method should only be used while writing custom validators. It cannot be used with Validation.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="validator"></param>
+        /// <param name="message"></param>
+        /// <param name="validators"></param>
+        /// <returns></returns>
         public static Validator<T> And<T>(this Validator<T> validator, string message, params Validator[] validators)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>
@@ -231,6 +247,14 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
+        /// <summary>
+        /// This method should only be used while writing custom validators. It cannot be used with Validation.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="validator"></param>
+        /// <param name="message"></param>
+        /// <param name="validators"></param>
+        /// <returns></returns>
         public static Validator<T> IfThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Validator[] validators)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>
@@ -256,6 +280,14 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
+        /// <summary>
+        /// This method should only be used while writing custom validators. It cannot be used with Validation.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="validator"></param>
+        /// <param name="message"></param>
+        /// <param name="validators"></param>
+        /// <returns></returns>
         public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Validator[] validators)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>

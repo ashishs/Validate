@@ -44,8 +44,9 @@ namespace Validate
         public Validator<T> RunAgainst(T target)
         {
             var validator = target.Validate(GetOptionsWhileValidating());
-            foreach(var validation in _validator.Validations)
+            for(int i=0; i< _validator.Validations.Count; i++)
             {
+                var validation = _validator.Validations[i];
                 validation.ExecuteInValidationBlock(validator, "");
             }
 
