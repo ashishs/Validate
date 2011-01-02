@@ -12,6 +12,7 @@
     <AssemblyName>Validate</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,6 +44,7 @@
     <Compile Include="EnumerableX.cs" />
     <Compile Include="GenericX.cs" />
     <Compile Include="StringX.cs" />
+    <Compile Include="Validation.cs" />
     <Compile Include="ValidationError.cs" />
     <Compile Include="ValidationException.cs" />
     <Compile Include="ValidationOptions.cs" />

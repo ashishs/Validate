@@ -45,7 +45,7 @@ namespace Validate.UnitTests.Examples
                                                                   .IsNotNullOrEmpty(a => a.Zipcode, "Zipcode is mandatory."),
                                            contact.CurrentJob.Validate()
                                                              .IsNotNullOrEmpty(j => j.Title, "Job title is mandatory.")
-                                                             .IsLessThan(j => j.From, DateTime.Today, "From date should be earlier than today.")
+                                                             .IsLesserThan(j => j.From, DateTime.Today, "From date should be earlier than today.")
                                                              .IfThen(j => j.To.HasValue, "To should be after from.", j => j.To.Value > j.From)
                                           );
             Assert.IsTrue(validator.IsValid);

@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 
 namespace Validate
 {
@@ -13,6 +14,8 @@ namespace Validate
         /// <returns>An instance of the Validator class</returns>
         public static Validator<T> Validate<T>(this T obj, ValidationOptions options = null)
         {
+            if (typeof(Validator).IsAssignableFrom(typeof(T)))
+                throw new InvalidOperationException("Validators cannot be validated using validate extensions.");
             return new Validator<T>(obj, options: options);
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace Validate
+﻿using System;
+
+namespace Validate
 {
     /// <summary>
     /// This specifies the behaviour of the validator.
@@ -19,11 +21,15 @@
         /// The Validation result transformer. This raises a custom exception given a validator with errors.
         /// </summary>
         public ValidationResultToExceptionTransformer ValidationResultToExceptionTransformer { get; set; }
-        
+
+        public bool Enabled { get; set; }
+
         public ValidationOptions()
         {
+            Enabled = true;
             StopOnFirstError = true;
             ThrowValidationExceptionOnValidationError = false;
+            ValidationResultToExceptionTransformer = new ValidationResultToValidationExceptionTransformer();
         }
     }
 }

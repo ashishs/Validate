@@ -12,6 +12,7 @@
     <AssemblyName>Validate.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,9 +48,19 @@
     <Compile Include="Examples\Contract.cs" />
     <Compile Include="Examples\ValidationExamples_1.cs" />
     <Compile Include="Person.cs" />
-    <Compile Include="ValidatorTestsForSimpleValidations.cs" />
+    <Compile Include="ValidationTestsForSimpleValidation.cs" />
+    <Compile Include="ValidatorTestsForChainedValidations.cs" />
     <Compile Include="ValidatorTestsForAggregateValidations.cs" />
     <Compile Include="ValidatorTestsForValidationExceptions.cs" />
+    <Compile Include="ValidatorTests_Between.cs" />
+    <Compile Include="ValidatorTests_GreaterThan.cs" />
+    <Compile Include="ValidatorTests_IsTrueIsFalse.cs" />
+    <Compile Include="ValidatorTests_LesserThan.cs" />
+    <Compile Include="ValidatorTests_NotNull.cs" />
+    <Compile Include="ValidatorTests_IsNull.cs" />
+    <Compile Include="ValidatorTests_NotBetween.cs" />
+    <Compile Include="ValidatorTests_NotNullOrEmpty.cs" />
+    <Compile Include="ValidatorTests_NullOrEmpty.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\nunit.framework.dll" />

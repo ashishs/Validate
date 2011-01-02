@@ -13,7 +13,22 @@ namespace Validate.UnitTests
                 .And("Some validation failed", new[]
                                                    {
                                                        obj.Validate().IsNotNull(v => v, "Object should be null"), 
-                                                       obj.Validate().IsNull(v => v.Name, "Name should be null")
+                                                       obj.Validate().IsNotNull(v => v.Name, "Name should be null")
+                                                   });
+
+            Assert.IsTrue(validator.IsValid);
+        }
+
+        [Test]
+        public void ShouldFailAndValidation()
+        {
+            var obj = new { Name = "Ashish", Goals = 15, Fouls = 100 };
+            var validator = obj.Validate()
+                .And("Some validation failed", new[]
+                                                   {
+                                                       obj.Validate().IsNotNull(v => v, "Object should be null"), 
+                                                       obj.Validate().IsNull(v => v.Name, "Name should be null"),
+                                                       obj.Validate().IsGreaterThan(v => v.Goals, 20, "Should have more than 20 goals")
                                                    });
 
             Assert.IsFalse(validator.IsValid);
