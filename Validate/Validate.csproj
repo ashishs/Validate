@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IValidationRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EnumerableX.cs" />
     <Compile Include="GenericX.cs" />
@@ -48,6 +49,8 @@
     <Compile Include="ValidationError.cs" />
     <Compile Include="ValidationException.cs" />
     <Compile Include="ValidationOptions.cs" />
+    <Compile Include="ValidationRepository.cs" />
+    <Compile Include="ValidationRepositoryFactory.cs" />
     <Compile Include="ValidationResultToExceptionTransformer.cs" />
     <Compile Include="Validator.cs" />
     <Compile Include="ValidatorX.cs" />

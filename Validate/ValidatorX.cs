@@ -167,18 +167,11 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
-        /// <summary>
-        /// This method should only be used while writing custom validators. It cannot be used with Validation.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="validator"></param>
-        /// <param name="message"></param>
-        /// <param name="validators"></param>
-        /// <returns></returns>
-        public static Validator<T> Or<T>(this Validator<T> validator, string message, params Validator[] validators)
+        public static Validator<T> Or<T>(this Validator<T> validator, string message, params Func<T,Validator>[] nestedValidators)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>
             {
+                var validators = nestedValidators.Select(valFunc => valFunc(v.Target));
                 var match = validators.Any(val => val.IsValid);
                 if (!match)
                     v.AddError(new ValidationError(message, v.Target, cause: GetCauses(validators).Join(" And ")));
@@ -209,10 +202,11 @@ namespace Validate
         /// <param name="message"></param>
         /// <param name="validators"></param>
         /// <returns></returns>
-        public static Validator<T> And<T>(this Validator<T> validator, string message, params Validator[] validators)
+        public static Validator<T> And<T>(this Validator<T> validator, string message, params Func<T, Validator>[] nestedValidators)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>
             {
+                var validators = nestedValidators.Select(valFunc => valFunc(v.Target));
                 var match = validators.All(val => val.IsValid);
                 if (!match)
                     v.AddError(new ValidationError(message, v.Target, cause: GetCauses(validators).Join(" Or ")));
@@ -255,10 +249,11 @@ namespace Validate
         /// <param name="message"></param>
         /// <param name="validators"></param>
         /// <returns></returns>
-        public static Validator<T> IfThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Validator[] validators)
+        public static Validator<T> IfThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Func<T, Validator>[] nestedValidators)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>
             {
+                var validators = nestedValidators.Select(valFunc => valFunc(v.Target));
                 var match = ifThis(v.Target);
                 if (match && validators.Any(val => !val.IsValid))
                     v.AddError(new ValidationError(message, v.Target, cause: GetCauses(validators).Join(" ")));
@@ -280,18 +275,11 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
-        /// <summary>
-        /// This method should only be used while writing custom validators. It cannot be used with Validation.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="validator"></param>
-        /// <param name="message"></param>
-        /// <param name="validators"></param>
-        /// <returns></returns>
-        public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Validator[] validators)
+        public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Func<T, Validator>[] nestedValidators)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>
             {
+                var validators = nestedValidators.Select(valFunc => valFunc(v.Target));
                 var match = ifThis(v.Target);
                 if (!match && validators.Any(val => !val.IsValid))
                     validator.AddError(new ValidationError(message, v.Target, cause: GetCauses(validators).Join(" ")));

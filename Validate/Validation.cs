@@ -2,16 +2,23 @@
 
 namespace Validate
 {
-    public class Validation<T>
+    public interface IValidationMetadata
     {
-        private readonly string _alias;
+        string Alias { get; }
+        Type ValidationTargetType { get; }
+    }
+
+    public class Validation<T> : IValidationMetadata
+    {
+        public string Alias { get; private set; }
         private readonly ValidationOptions _options;
         private Validator<T> _validator;
+        public Type ValidationTargetType { get { return typeof (T); } }
         private readonly object _lock = new object();
-        
+
         public Validation(string alias = null, ValidationOptions options = null)
         {
-            _alias = alias.IsNullOrEmpty() ? "DEFAULT".WithFormat(typeof (T).FullName) : alias;
+            Alias = alias.IsNullOrEmpty() ? "Default_Validation" : alias;
             
             _options = options ?? new ValidationOptions();
             _options.Enabled = false;
@@ -26,19 +33,6 @@ namespace Validate
                 _validator = validations(_validator);
             }
             return this;
-        }
-
-        public Validator<T> ValidationTarget
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    if (_validator == null)
-                        _validator = default(T).Validate(_options);
-                }
-                return _validator;
-            }
         }
 
         public Validator<T> RunAgainst(T target)

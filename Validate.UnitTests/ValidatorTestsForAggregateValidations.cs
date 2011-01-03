@@ -10,11 +10,10 @@ namespace Validate.UnitTests
         {
             var obj = new { Name = "Ashish", Goals = 15, Fouls = 100 };
             var validator = obj.Validate()
-                .And("Some validation failed", new[]
-                                                   {
-                                                       obj.Validate().IsNotNull(v => v, "Object should be null"), 
-                                                       obj.Validate().IsNotNull(v => v.Name, "Name should be null")
-                                                   });
+                .And("Some validation failed", 
+                     o => o.Validate().IsNotNull(v => v, "Object should be null"), 
+                     o => o.Validate().IsNotNull(v => v.Name, "Name should be null")
+                    );
 
             Assert.IsTrue(validator.IsValid);
         }
@@ -24,12 +23,11 @@ namespace Validate.UnitTests
         {
             var obj = new { Name = "Ashish", Goals = 15, Fouls = 100 };
             var validator = obj.Validate()
-                .And("Some validation failed", new[]
-                                                   {
-                                                       obj.Validate().IsNotNull(v => v, "Object should be null"), 
-                                                       obj.Validate().IsNull(v => v.Name, "Name should be null"),
-                                                       obj.Validate().IsGreaterThan(v => v.Goals, 20, "Should have more than 20 goals")
-                                                   });
+                .And("Some validation failed", 
+                     o => o.Validate().IsNotNull(v => v, "Object should be null"), 
+                     o => o.Validate().IsNull(v => v.Name, "Name should be null"),
+                     o => o.Validate().IsGreaterThan(v => v.Goals, 20, "Should have more than 20 goals")
+                    );
 
             Assert.IsFalse(validator.IsValid);
         }
@@ -39,11 +37,10 @@ namespace Validate.UnitTests
         {
             var obj = new { Name = "Ashish", Goals = 15, Fouls = 100 };
             var validator = obj.Validate()
-                .Or("Some validation failed", new[]
-                                                  {
-                                                      obj.Validate().IsNotNull(v => v, "Object should not be null"), 
-                                                      obj.Validate().IsNull(v => v.Name, "Name should be null")
-                                                  });
+                .Or("Some validation failed", 
+                    o => o.Validate().IsNotNull(v => v, "Object should not be null"), 
+                    o => o.Validate().IsNull(v => v.Name, "Name should be null")
+                   );
 
             Assert.IsTrue(validator.IsValid);
         }
@@ -53,11 +50,10 @@ namespace Validate.UnitTests
         {
             var obj = new Person { Name = "Ashish", Goals = 15, Fouls = 100 };
             var validator = obj.Validate()
-                .Or("Some validation failed", new[]
-                                                  {
-                                                      obj.Validate().IsNull(v => v, "Object should not be null"), 
-                                                      obj.Validate().IsNull(v => v.Name, "Name should be null")
-                                                  });
+                .Or("Some validation failed", 
+                    o => o.Validate().IsNull(v => v, "Object should not be null"), 
+                    o => o.Validate().IsNull(v => v.Name, "Name should be null")
+                   );
 
             Assert.IsFalse(validator.IsValid);
         }
@@ -67,16 +63,13 @@ namespace Validate.UnitTests
         {
             var obj = new Person { Name = "Ashish", Goals = 15, Fouls = 100 };
             var validator = obj.Validate()
-                .Or("Or validation failed", new[]
-                                                {
-                                                    obj.Validate().IsNull(v => v, "Object should be null"),
-                                                    obj.Validate().And("And validations failed.", new []
-                                                                                                      {
-                                                                                                          obj.Validate().IsNull(v => v.Name, "Name should be null"),
-                                                                                                          obj.Validate().IsGreaterThan(v => v.Age, 25,"Age should be greater than 25")
-                                                                                                      }),
-                                                    obj.Validate().IsNull(v => v.Name, "Name should be null")
-                                                });
+                .Or("Or validation failed", 
+                    o => o.Validate().IsNull(v => v, "Object should be null"),
+                    o => o.Validate().And("And validations failed.", 
+                                            x => x.Validate().IsNull(v => v.Name, "Name should be null"),
+                                            x => x.Validate().IsGreaterThan(v => v.Age, 25,"Age should be greater than 25")),
+                    o => o.Validate().IsNull(v => v.Name, "Name should be null")
+                   );
 
             Assert.IsFalse(validator.IsValid);
         }

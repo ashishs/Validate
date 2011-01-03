@@ -37,13 +37,13 @@ namespace Validate.UnitTests.Examples
             var validator = contact.Validate()
                                    .IfThen(c => c.Organization != null, 
                                            "Address and Current Job should be provided.", 
-                                           contact.BusinessAddress.Validate()
+                                           c => c.BusinessAddress.Validate()
                                                                   .IsNotNullOrEmpty(a => a.AddressLine1, "Line 1 is mandatory.")
                                                                   .IsNotNullOrEmpty(a => a.AddressLine2, "Line 2 is mandatory.")
                                                                   .IsNotNullOrEmpty(a => a.City, "City is mandatory.")
                                                                   .IsNotNullOrEmpty(a => a.Country, "Country is mandatory.")
                                                                   .IsNotNullOrEmpty(a => a.Zipcode, "Zipcode is mandatory."),
-                                           contact.CurrentJob.Validate()
+                                           c => c.CurrentJob.Validate()
                                                              .IsNotNullOrEmpty(j => j.Title, "Job title is mandatory.")
                                                              .IsLesserThan(j => j.From, DateTime.Today, "From date should be earlier than today.")
                                                              .IfThen(j => j.To.HasValue, "To should be after from.", j => j.To.Value > j.From)
@@ -59,8 +59,8 @@ namespace Validate.UnitTests.Examples
 
             var validator = contact.Validate()
                             .Or("Atleast one of personal email or business email must be specified.",
-                                contact.PersonalEmail.Validate().IsNotNullOrEmpty(e => e, "Personal email is required."),
-                                contact.BusinessEmail.Validate().IsNotNullOrEmpty(e => e, "Business email is required.")
+                                c => c.PersonalEmail.Validate().IsNotNullOrEmpty(e => e, "Personal email is required."),
+                                c => c.BusinessEmail.Validate().IsNotNullOrEmpty(e => e, "Business email is required.")
                                );
             Assert.IsTrue(validator.IsValid);
 
@@ -69,8 +69,8 @@ namespace Validate.UnitTests.Examples
             contact.BusinessEmail = null;
             validator = contact.Validate()
                             .Or("Atleast one of personal email or business email must be specified.",
-                                contact.PersonalEmail.Validate().IsNotNullOrEmpty(e => e, "Personal email is required."),
-                                contact.BusinessEmail.Validate().IsNotNullOrEmpty(e => e, "Business email is required.")
+                                c => c.PersonalEmail.Validate().IsNotNullOrEmpty(e => e, "Personal email is required."),
+                                c => c.BusinessEmail.Validate().IsNotNullOrEmpty(e => e, "Business email is required.")
                                );
             Assert.IsFalse(validator.IsValid);
             Assert.IsNotEmpty(validator.Errors);

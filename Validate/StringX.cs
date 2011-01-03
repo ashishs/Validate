@@ -20,5 +20,10 @@ namespace Validate
         {
             return string.Format(format, values);
         }
+
+        public static bool EqualsIgnoreCase(this string s, string other)
+        {
+            return string.Compare(s, other, true) == 0;
+        }
     }
 }
