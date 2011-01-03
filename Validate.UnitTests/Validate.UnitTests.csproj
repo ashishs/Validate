@@ -50,6 +50,7 @@
     <Compile Include="Examples\ValidationExamples_1.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="ValidationRepositoryFactoryTests.cs" />
+    <Compile Include="ValidationRepositoryTests.cs" />
     <Compile Include="ValidationTests.cs" />
     <Compile Include="ValidatorTestsForChainedValidations.cs" />
     <Compile Include="ValidatorTestsForAggregateValidations.cs" />
