@@ -41,7 +41,7 @@ namespace Validate
             for(int i=0; i< _validator.Validations.Count; i++)
             {
                 var validation = _validator.Validations[i];
-                validation.ExecuteInValidationBlock(validator, "");
+                validation.RunAgainst(validator);
             }
 
             return validator;

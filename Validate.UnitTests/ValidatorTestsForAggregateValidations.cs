@@ -79,7 +79,7 @@ namespace Validate.UnitTests
         {
             var obj = new Person { Name = "Ashish", Goals = 15, Fouls = 100, Age = 26 };
             var validator = obj.Validate()
-                .IfThen(p => p.Goals > 10, "Failed vallidation", p => p.Fouls < 5, p => p.Age > 0);
+                .IfThen(p => p.Goals > 10, "Failed validation", p => p.Fouls < 5, p => p.Age > 0);
 
             Assert.IsFalse(validator.IsValid);
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
@@ -12,308 +12,187 @@ namespace Validate
     /// </summary>
     public static class ValidatorX
     {
-        public static Validator<T> IsNotNull<T, U>(this Validator<T> validator, Func<T, U> selector, string message) where U : class
+        public static Validator<T> IsNotNull<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, string message = null) where U : class
         {
-            Func <Validator<T> ,Validator<T>> validation = (v) =>
-                {
-                    var target = selector(v.Target);
-                    if (target == null)
-                        v.AddError(new ValidationError(message, target, cause: message));
-                    return v;
-                };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+            var validationExpression = new IsNotNullTargetMemberExpression<T, U>(selector, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsNotNullOrEmpty<T, U>(this Validator<T> validator, Func<T, U> selector, string message) where U : IEnumerable
+        public static Validator<T> IsNotNullOrEmpty<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, string message = null) where U : IEnumerable
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (target == null || target.OfType<object>().Count() == 0)
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsNotNullOrEmptyTargetMemberExpression<T, U>(selector, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsNull<T, U>(this Validator<T> validator, Func<T, U> selector, string message) where U : class
+        public static Validator<T> IsNull<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, string message = null) where U : class
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (target != null)
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsNullTargetMemberExpression<T, U>(selector, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsNullOrEmpty<T, U>(this Validator<T> validator, Func<T, U> selector, string message) where U : IEnumerable
+        public static Validator<T> IsNullOrEmpty<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, string message = null) where U : IEnumerable
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (!(target == null || target.OfType<object>().Count() == 0))
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsNullOrEmptyTargetMemberExpression<T, U>(selector, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsEqualTo<T, U>(this Validator<T> validator, Func<T, U> selector, U equalTo, string message)
+        public static Validator<T> IsEqualTo<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, U equalTo, string message = null)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (!target.Equals(equalTo))
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsEqualToTargetMemberExpression<T, U>(selector, equalTo, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsNotEqualTo<T, U>(this Validator<T> validator, Func<T, U> selector, U notEqualTo, string message)
+        public static Validator<T> IsNotEqualTo<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, U notEqualTo, string message = null)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (target.Equals(notEqualTo))
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsNotEqualToTargetMemberExpression<T, U>(selector, notEqualTo, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsGreaterThan<T, U>(this Validator<T> validator, Func<T, U> selector, U greaterThanValue, string message) where U : IComparable
+        public static Validator<T> IsGreaterThan<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, U greaterThanValue, string message = null) where U : IComparable
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (target.CompareTo(greaterThanValue) <= 0)
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsGreaterThanTargetMemberExpression<T, U>(selector, greaterThanValue, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsLesserThan<T, U>(this Validator<T> validator, Func<T, U> selector, U lesserThanValue, string message) where U : IComparable
+        public static Validator<T> IsLesserThan<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, U lesserThanValue, string message = null) where U : IComparable
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (target.CompareTo(lesserThanValue) >= 0)
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsLesserThanTargetMemberExpression<T, U>(selector, lesserThanValue, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsBetween<T, U>(this Validator<T> validator, Func<T, U> selector, U greaterThanOrEqualToValue, U lesserThanOrEqualToValue, string message) where U : IComparable
+        public static Validator<T> IsBetween<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, U greaterThanOrEqualToValue, U lesserThanOrEqualToValue, string message = null) where U : IComparable
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (target.CompareTo(lesserThanOrEqualToValue) > 0 || target.CompareTo(greaterThanOrEqualToValue) < 0)
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsBetweenTargetMemberExpression<T, U>(selector, lesserThanOrEqualToValue, greaterThanOrEqualToValue, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsNotBetween<T, U>(this Validator<T> validator, Func<T, U> selector, U greaterThanOrEqualToValue, U lesserThanOrEqualToValue, string message) where U : IComparable
+        public static Validator<T> IsNotBetween<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, U greaterThanOrEqualToValue, U lesserThanOrEqualToValue, string message = null) where U : IComparable
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (target.CompareTo(lesserThanOrEqualToValue) <= 0 && target.CompareTo(greaterThanOrEqualToValue) >= 0)
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsNotBetweenTargetMemberExpression<T, U>(selector, lesserThanOrEqualToValue, greaterThanOrEqualToValue, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsTrue<T>(this Validator<T> validator, Predicate<T> predicate, string message)
+        public static Validator<T> IsTrue<T>(this Validator<T> validator, Expression<Func<T,bool>> predicate, string message = null)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = v.Target;
-                if (!predicate(target))
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsTrueTargetMemberExpression<T>(predicate, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsFalse<T>(this Validator<T> validator, Predicate<T> predicate, string message)
+        public static Validator<T> IsFalse<T>(this Validator<T> validator, Expression<Func<T, bool>> predicate, string message = null)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = v.Target;
-                if (predicate(target))
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsFalseTargetMemberExpression<T>(predicate, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
         public static Validator<T> Or<T>(this Validator<T> validator, string message, params Func<T,Validator>[] nestedValidators)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var validators = nestedValidators.Select(valFunc => valFunc(v.Target));
-                var match = validators.Any(val => val.IsValid);
-                if (!match)
-                    v.AddError(new ValidationError(message, v.Target, cause: GetCauses(validators).Join(" And ")));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new OrTargetMemberExpression<T>(validationMessage, nestedValidators);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
         
         public static Validator<T> Or<T>(this Validator<T> validator, string message, params Predicate<T>[] predicates)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var match = predicates.Any(p => p(v.Target));
-                if (!match)
-                    validator.AddError(new ValidationError(message, v.Target, cause: "{{ None of the predicates returned true. }}"));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new OrTargetMemberExpression<T>(validationMessage, predicates);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
         public static Validator<T> And<T>(this Validator<T> validator, string message, params Func<T, Validator>[] nestedValidators)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var validators = nestedValidators.Select(valFunc => valFunc(v.Target));
-                var match = validators.All(val => val.IsValid);
-                if (!match)
-                    v.AddError(new ValidationError(message, v.Target, cause: GetCauses(validators).Join(" Or ")));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new AndTargetMemberExpression<T>(validationMessage, nestedValidators);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> And<T>(this Validator<T> validator, string message, params Predicate<T>[] predicates)
+        public static Validator<T> And<T>(this Validator<T> validator, string message , params Predicate<T>[] predicates)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var match = predicates.All(p => p(v.Target));
-                if (!match)
-                    v.AddError(new ValidationError(message, v.Target, cause: "{{ Atleast one of the predicates returned false. }}"));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new AndTargetMemberExpression<T>(validationMessage, predicates);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
         public static Validator<T> IfThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Predicate<T>[] predicates)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                if (ifThis(v.Target) && predicates.Select(p => p).FirstOrDefault(p => !p(v.Target)) != null)
-                    v.AddError(new ValidationError(message, v.Target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IfThenTargetMemberExpression<T>(ifThis, validationMessage, predicates);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
         public static Validator<T> IfThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Func<T, Validator>[] nestedValidators)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var validators = nestedValidators.Select(valFunc => valFunc(v.Target));
-                var match = ifThis(v.Target);
-                if (match && validators.Any(val => !val.IsValid))
-                    v.AddError(new ValidationError(message, v.Target, cause: GetCauses(validators).Join(" ")));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IfThenTargetMemberExpression<T>(ifThis, validationMessage, nestedValidators);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Predicate<T>[] predicates)
+        public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifNotThis, string message, params Predicate<T>[] predicates)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                if (!ifThis(v.Target) && predicates.Select(p => p).FirstOrDefault(p => !p(v.Target)) != null)
-                    v.AddError(new ValidationError(message, v.Target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IfNotThenTargetMemberExpression<T>(ifNotThis, validationMessage, predicates);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Func<T, Validator>[] nestedValidators)
+        public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifNotThis, string message, params Func<T, Validator>[] nestedValidators)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var validators = nestedValidators.Select(valFunc => valFunc(v.Target));
-                var match = ifThis(v.Target);
-                if (!match && validators.Any(val => !val.IsValid))
-                    validator.AddError(new ValidationError(message, v.Target, cause: GetCauses(validators).Join(" ")));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IfNotThenTargetMemberExpression<T>(ifNotThis, validationMessage, nestedValidators);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> MatchesRegex<T>(this Validator<T> validator, Func<T,string> selector, string regexPattern, string message)
+        public static Validator<T> MatchesRegex<T>(this Validator<T> validator, Expression<Func<T,string>> selector, string regexPattern, RegexOptions regexOptions = RegexOptions.IgnoreCase, string message = null)
         {
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (!Regex.IsMatch(target, regexPattern))
-                    v.AddError(new ValidationError(message, target, cause: message));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new MatchesRegexTargetMemberExpression<T>(selector, regexPattern, regexOptions, validationMessage);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> Contains<T, U, V>(this Validator<T> validator, Func<T, U> selector, string message, params V[] values) where U : IEnumerable<V>
+        public static Validator<T> Contains<T, U, V>(this Validator<T> validator, Expression<Func<T, U>> selector, string message = null, params V[] values) where U : IEnumerable<V>
         {
-            var valuesToCheck = values ?? new V[0];
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                var valuesNotContained = valuesToCheck.Where(val => !target.Contains(val));
-                if (valuesNotContained.Count() > 0)
-                    v.AddError(new ValidationError(message, target, cause: "The Enumerable did not contain values {{{0}}}".WithFormat(valuesNotContained.Select(val => val.ToString()).Join(" | "))));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new ContainsTargetMemberExpression<T,U,V>(selector, validationMessage, values);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IsOneOf<T, U>(this Validator<T> validator, Func<T, U> selector, string message, params U[] oneOfValues)
+        public static Validator<T> IsOneOf<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, string message = null, params U[] oneOfValues)
         {
-            var valuesToCheck = oneOfValues ?? new U[0];
-            Func<Validator<T>, Validator<T>> validation = (v) =>
-            {
-                var target = selector(v.Target);
-                if (!valuesToCheck.Any(val => val.Equals(target)))
-                    v.AddError(new ValidationError(message, target, cause: "The value {0} was not found in the given values {{1}}".WithFormat(target, valuesToCheck.Select(val => val.ToString()).Join(" | "))));
-                return v;
-            };
-            validator.AddValidation(validation, message);
-            return validation.ExecuteInValidationBlock(validator, message);
+            var validationMessage = new ValidationMessage(message);
+
+            var validationExpression = new IsOneOfTargetMemberExpression<T,U>(selector, validationMessage, oneOfValues);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
         public static void Throw(this Validator validator)
@@ -326,45 +205,6 @@ namespace Validate
             };
 
             validation(validator);
-        }
-
-        private static List<string> GetCauses(IEnumerable<Validator> validators)
-        {
-            return validators.SelectMany(v => v.Errors.Select(e => "{{{0}}}".WithFormat(e.Cause))).ToList();
-        }
-
-        public static Validator<T> ExecuteInValidationBlock<T>(this Func<Validator<T>,Validator<T>> func, Validator<T> validator, string message)
-        {
-            try
-            {
-                return validator.ValidateFurther ? func(validator) : validator;
-            }
-            catch (ValidationException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                validator.AddError(new ValidationError(message, validator.Target, cause: "{{{0} : Exception : {1}}}".WithFormat(message, ex.ToString())));
-            }
-            return validator;
-        }
-
-        public static Validator ExecuteInValidationBlock(this Func<Validator, Validator> func, Validator validator, string message)
-        {
-            try
-            {
-                return validator.ValidateFurther ? func(validator) : validator;
-            }
-            catch (ValidationException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                validator.AddError(new ValidationError(message, validator.ValidationTarget, cause: "{{{0} : Exception : {1}}}".WithFormat(message, ex.ToString())));
-            }
-            return validator;
         }
     }
 }

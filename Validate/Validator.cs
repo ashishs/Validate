@@ -32,7 +32,7 @@ namespace Validate
 
         private ValidationOptions _options;
         private List<ValidationError> _errors = new List<ValidationError>();
-        private List<Func<Validator<T>, Validator<T>>> _validations = new List<Func<Validator<T>, Validator<T>>>();
+        private List<ValidationMethod<T>> _validations = new List<ValidationMethod<T>>();
 
         internal Validator(T target, ValidationOptions options = null)
         {
@@ -54,7 +54,7 @@ namespace Validate
             
         }
 
-        public ReadOnlyCollection<Func<Validator<T>, Validator<T>>> Validations
+        public ReadOnlyCollection<ValidationMethod<T>> Validations
         {
             get
             {
@@ -64,9 +64,9 @@ namespace Validate
 
         public override ValidationResultToExceptionTransformer ValidationResultToExceptionTransformer { get { return _options.ValidationResultToExceptionTransformer; } }
         
-        public void AddValidation(Func<Validator<T>, Validator<T>> validation, string message)
-        {
-            _validations.Add(validation);
+        public void AddValidation(ValidationMethod<T> validationMethod)
+        {   
+            _validations.Add(validationMethod);
         }
 
         /// <summary>

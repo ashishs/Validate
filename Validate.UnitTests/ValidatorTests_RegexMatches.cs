@@ -9,7 +9,7 @@ namespace Validate.UnitTests
         public void ShouldPassForMatchesRegex()
         {
             var person = new Person {Name = "Some Person"};
-            var validator = person.Validate().MatchesRegex(p => p.Name, "Some\\sPerson", "Regex match failed.");
+            var validator = person.Validate().MatchesRegex(p => p.Name, "Some\\sPerson",message: "Regex match failed.");
             Assert.IsTrue(validator.IsValid);
         }
 
@@ -17,7 +17,7 @@ namespace Validate.UnitTests
         public void ShouldFailForMatchesRegex()
         {
             var person = new Person { Name = "Some Person" };
-            var validator = person.Validate().MatchesRegex(p => p.Name, "Some\\sOther\\sPerson", "Regex match failed.");
+            var validator = person.Validate().MatchesRegex(p => p.Name, "Some\\sOther\\sPerson", message: "Regex match failed.");
             Assert.IsFalse(validator.IsValid);
         }
     }
