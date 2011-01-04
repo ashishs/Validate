@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace Validate
 {
@@ -194,14 +195,6 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
-        /// <summary>
-        /// This method should only be used while writing custom validators. It cannot be used with Validation.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="validator"></param>
-        /// <param name="message"></param>
-        /// <param name="validators"></param>
-        /// <returns></returns>
         public static Validator<T> And<T>(this Validator<T> validator, string message, params Func<T, Validator>[] nestedValidators)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>
@@ -241,14 +234,6 @@ namespace Validate
             return validation.ExecuteInValidationBlock(validator, message);
         }
 
-        /// <summary>
-        /// This method should only be used while writing custom validators. It cannot be used with Validation.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="validator"></param>
-        /// <param name="message"></param>
-        /// <param name="validators"></param>
-        /// <returns></returns>
         public static Validator<T> IfThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Func<T, Validator>[] nestedValidators)
         {
             Func<Validator<T>, Validator<T>> validation = (v) =>
@@ -283,6 +268,48 @@ namespace Validate
                 var match = ifThis(v.Target);
                 if (!match && validators.Any(val => !val.IsValid))
                     validator.AddError(new ValidationError(message, v.Target, cause: GetCauses(validators).Join(" ")));
+                return v;
+            };
+            validator.AddValidation(validation, message);
+            return validation.ExecuteInValidationBlock(validator, message);
+        }
+
+        public static Validator<T> MatchesRegex<T>(this Validator<T> validator, Func<T,string> selector, string regexPattern, string message)
+        {
+            Func<Validator<T>, Validator<T>> validation = (v) =>
+            {
+                var target = selector(v.Target);
+                if (!Regex.IsMatch(target, regexPattern))
+                    v.AddError(new ValidationError(message, target, cause: message));
+                return v;
+            };
+            validator.AddValidation(validation, message);
+            return validation.ExecuteInValidationBlock(validator, message);
+        }
+
+        public static Validator<T> Contains<T, U, V>(this Validator<T> validator, Func<T, U> selector, string message, params V[] values) where U : IEnumerable<V>
+        {
+            var valuesToCheck = values ?? new V[0];
+            Func<Validator<T>, Validator<T>> validation = (v) =>
+            {
+                var target = selector(v.Target);
+                var valuesNotContained = valuesToCheck.Where(val => !target.Contains(val));
+                if (valuesNotContained.Count() > 0)
+                    v.AddError(new ValidationError(message, target, cause: "The Enumerable did not contain values {{{0}}}".WithFormat(valuesNotContained.Select(val => val.ToString()).Join(" | "))));
+                return v;
+            };
+            validator.AddValidation(validation, message);
+            return validation.ExecuteInValidationBlock(validator, message);
+        }
+
+        public static Validator<T> IsOneOf<T, U>(this Validator<T> validator, Func<T, U> selector, string message, params U[] oneOfValues)
+        {
+            var valuesToCheck = oneOfValues ?? new U[0];
+            Func<Validator<T>, Validator<T>> validation = (v) =>
+            {
+                var target = selector(v.Target);
+                if (!valuesToCheck.Any(val => val.Equals(target)))
+                    v.AddError(new ValidationError(message, target, cause: "The value {0} was not found in the given values {{1}}".WithFormat(target, valuesToCheck.Select(val => val.ToString()).Join(" | "))));
                 return v;
             };
             validator.AddValidation(validation, message);
