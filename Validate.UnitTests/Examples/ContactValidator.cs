@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Validate.Extensions;
 
 namespace Validate.UnitTests.Examples
 {

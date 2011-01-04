@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using Validate.Extensions;
 
 namespace Validate.UnitTests
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Validate;
+using Validate.Extensions;
 
 namespace Validate.UnitTests.Examples
 {

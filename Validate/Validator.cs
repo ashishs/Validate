@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Validate;
 using System.Linq;
+using Validate.Extensions;
 
 namespace Validate
 {

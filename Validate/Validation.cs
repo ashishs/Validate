@@ -1,4 +1,5 @@
 ﻿using System;
+using Validate.Extensions;
 
 namespace Validate
 {

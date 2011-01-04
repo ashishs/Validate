@@ -40,32 +40,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AndTargetMemberExpression.cs" />
-    <Compile Include="ContainsTargetMemberExpression.cs" />
-    <Compile Include="IfNotThenTargetMemberExpression.cs" />
-    <Compile Include="IfThenTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\AndTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\ContainsTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IfNotThenTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IfThenTargetMemberExpression.cs" />
     <Compile Include="InvalidValidationException.cs" />
-    <Compile Include="IsBetweenTargetMemberExpression.cs" />
-    <Compile Include="IsEqualToTargetMemberExpression.cs" />
-    <Compile Include="IsFalseTargetMemberExpression.cs" />
-    <Compile Include="IsGreaterThanTargetMemberExpression.cs" />
-    <Compile Include="IsLesserThanTargetMemberExpression.cs" />
-    <Compile Include="IsNotBetweenTargetMemberExpression.cs" />
-    <Compile Include="IsNotEqualToTargetMemberExpression.cs" />
-    <Compile Include="IsNotNullOrEmptyTargetMemberExpression.cs" />
-    <Compile Include="IsNotNullTargetMemberExpression.cs" />
-    <Compile Include="IsNullOrEmptyTargetMemberExpression.cs" />
-    <Compile Include="IsNullTargetMemberExpression.cs" />
-    <Compile Include="IsOneOfTargetMemberExpression.cs" />
-    <Compile Include="IsTrueTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsBetweenTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsEqualToTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsFalseTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsGreaterThanTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsLesserThanTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsNotBetweenTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsNotEqualToTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsNotNullOrEmptyTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsNotNullTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsNullOrEmptyTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsNullTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsOneOfTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsTrueTargetMemberExpression.cs" />
     <Compile Include="IValidationRepository.cs" />
-    <Compile Include="MatchesRegexTargetMemberExpression.cs" />
-    <Compile Include="OrTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\MatchesRegexTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\OrTargetMemberExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EnumerableX.cs" />
-    <Compile Include="GenericX.cs" />
-    <Compile Include="StringX.cs" />
-    <Compile Include="TargetMemberValidationExpression.cs" />
+    <Compile Include="Extensions\EnumerableX.cs" />
+    <Compile Include="Extensions\GenericX.cs" />
+    <Compile Include="Extensions\StringX.cs" />
+    <Compile Include="ValidationExpressions\TargetMemberValidationExpression.cs" />
     <Compile Include="Validation.cs" />
     <Compile Include="ValidationError.cs" />
     <Compile Include="ValidationException.cs" />
@@ -76,7 +76,7 @@
     <Compile Include="ValidationRepositoryFactory.cs" />
     <Compile Include="ValidationResultToExceptionTransformer.cs" />
     <Compile Include="Validator.cs" />
-    <Compile Include="ValidatorX.cs" />
+    <Compile Include="Extensions\ValidatorX.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
