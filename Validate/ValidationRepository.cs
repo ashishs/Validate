@@ -36,22 +36,4 @@ namespace Validate
             throw new ArgumentException("Could not find any validation matching the given type and alias. | Type: {0} | Alias {1}".WithFormat(type.FullName, validationAlias));
         }
     }
-
-    public class ValidationMessageRepository
-    {
-        private ValidationMessageRepository(){}
-
-        static ValidationMessageRepository _instance = new ValidationMessageRepository();
-
-        public static ValidationMessageRepository Instance
-        {
-            get { return _instance; }
-            set { _instance = value; }
-        }
-
-        public virtual ValidationMessage GetValidationMessageForIsNull()
-        {
-            return new ValidationMessage("{TargetType}.{TargetMember} should be null.", true);
-        }
-    }
 }

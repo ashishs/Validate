@@ -34,32 +34,37 @@ namespace Validate.ValidationExpressions
 
         public override ValidationMethod<T> GetValidationMethod()
         {
+            var validationMessage = message.Populate(targetType: GetTargetTypeName(), targetMember: GetTargetMemberName());
             if (_useNestedValidators)
             {
                 Func<Validator<T>, Validator<T>> validation = (v) =>
                                                                   {
-                                                                      if (EvaluateIfPredicate(v.Target))
+                                                                      var target = v.Target;
+                                                                      if (EvaluateIfPredicate(target))
                                                                       {
-                                                                          var validators = _nestedValidators.Select(valFunc => valFunc(v.Target));
-                                                                          if (validators.Any(val => !val.IsValid))
-                                                                              v.AddError(new ValidationError(GetValidationMessage(), v.Target, cause: GetCauses(validators).Join(" ")));
+                                                                          var validators = _nestedValidators.Select(valFunc => valFunc(target)).ToList();
+                                                                          if(validators.Any(val => !val.IsValid))
+                                                                              v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target,
+                                                                                         "{{The IfThen validation for target member {0}.{1} with value {2} failed because {{{3}}} }}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), target, GetCauses(validators.Where(val => !val.IsValid)).Join(" "))));      
                                                                       }
                                                                       return v;
                                                                   };
-                return new ValidationMethod<T>(validation, GetValidationMessage(), typeof(T).Name, null);
+                return new ValidationMethod<T>(validation, validationMessage, typeof(T).Name, null);
             }
             else
             {
                 Func<Validator<T>, Validator<T>> validation = (v) =>
                                                                   {
-                                                                      if (EvaluateIfPredicate(v.Target))
+                                                                      var target = v.Target;
+                                                                      if (EvaluateIfPredicate(target))
                                                                       {
-                                                                          if (_predicates.Any(p => !p(v.Target)))
-                                                                              v.AddError(new ValidationError(GetValidationMessage(), v.Target, cause: "At least one of the predicates failed."));
+                                                                          if (_predicates.Any(val => !val(target)))
+                                                                              v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target,
+                                                                                         "{{The IfThen validation for target member {0}.{1} with value {2} failed because {{ At least one of the predicates failed. }} }}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), target)));      
                                                                       }
                                                                       return v;
                                                                   };
-                return new ValidationMethod<T>(validation, GetValidationMessage(), typeof(T).Name, null);
+                return new ValidationMethod<T>(validation, validationMessage, typeof(T).Name, null);
             }
         }
     }

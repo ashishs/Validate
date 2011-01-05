@@ -1,4 +1,6 @@
-﻿namespace Validate.UnitTests
+﻿using System.Collections.Generic;
+
+namespace Validate.UnitTests
 {
     internal class Person
     {
@@ -8,6 +10,7 @@
         public int Fouls { get; set; }
         public bool IsTrue { get; set; }
         public Address HomeAddress { get; set; }
+        public IEnumerable<string> EmailAddresses { get; set; }
 
         #region Equality Members
         public bool Equals(Person other)

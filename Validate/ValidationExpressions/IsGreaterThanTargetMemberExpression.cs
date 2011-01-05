@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using Validate.Extensions;
 
 namespace Validate.ValidationExpressions
 {
@@ -15,15 +16,17 @@ namespace Validate.ValidationExpressions
 
         public override ValidationMethod<T> GetValidationMethod()
         {
+            var validationMessage = message.Populate(targetType: GetTargetTypeName(), targetMember: GetTargetMemberName(), targetValueGreaterThan: _greaterThan);
             var compiledSelector = targetMemberExpression.Compile();
             Func<Validator<T>, Validator<T>> validation = (v) =>
                                                               {
                                                                   var target = compiledSelector(v.Target);
                                                                   if (target.CompareTo(_greaterThan) <= 0)
-                                                                      v.AddError(new ValidationError(GetValidationMessage(), target, cause: GetValidationMessage()));
+                                                                      v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target,
+                                                                                 cause: "{{The target member {0}.{1} with value {2} was not greater than {3}.}}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), target, _greaterThan)));
                                                                   return v;
                                                               };
-            return new ValidationMethod<T>(validation, GetValidationMessage(), GetTargetTypeName(), GetTargetMemberName());
+            return new ValidationMethod<T>(validation, validationMessage, GetTargetTypeName(), GetTargetMemberName());
         }
     }
 }

@@ -26,6 +26,7 @@ namespace Validate.ValidationExpressions
 
         public override ValidationMethod<T> GetValidationMethod()
         {
+            var validationMessage = message.Populate(targetType: GetTargetTypeName(), targetMember: GetTargetMemberName());
             if (_useNestedValidators)
             {
                 Func<Validator<T>, Validator<T>> validation = (v) =>
@@ -33,10 +34,11 @@ namespace Validate.ValidationExpressions
                                                                       var validators = _nestedValidators.Select(valFunc => valFunc(v.Target));
                                                                       var match = validators.All(val => val.IsValid);
                                                                       if (!match)
-                                                                          v.AddError(new ValidationError(GetValidationMessage(), v.Target, cause: GetCauses(validators).Join(" Or ")));
+                                                                          v.AddError(new ValidationError(validationMessage.Populate(targetValue: v.Target).ToString(), v.Target,
+                                                                                     "{{The AND validation for target member {0}.{1} with value {2} failed because {{{3}}} }}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), v.Target, GetCauses(validators.Where(val => !val.IsValid)).Join(" And "))));      
                                                                       return v;
                                                                   };
-                return new ValidationMethod<T>(validation, GetValidationMessage(), typeof(T).Name, null);
+                return new ValidationMethod<T>(validation, validationMessage, typeof(T).Name, null);
             }
             else
             {
@@ -44,10 +46,11 @@ namespace Validate.ValidationExpressions
                                                                   {
                                                                       var match = _predicates.All(p => p(v.Target));
                                                                       if (!match)
-                                                                          v.AddError(new ValidationError(GetValidationMessage(), v.Target, cause: "At least one of the predicates failed."));
+                                                                          v.AddError(new ValidationError(validationMessage.Populate(targetValue: v.Target).ToString(), v.Target,
+                                                                                     "{{The AND validation for target member {0}.{1} with value {2} failed because {{ At least one of the predicates failed. }} }}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), v.Target)));      
                                                                       return v;
                                                                   };
-                return new ValidationMethod<T>(validation, GetValidationMessage(), typeof(T).Name, null);
+                return new ValidationMethod<T>(validation, validationMessage, typeof(T).Name, null);
             }
         }
     }

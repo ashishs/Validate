@@ -57,9 +57,11 @@
     <Compile Include="ValidatorTestsForValidationExceptions.cs" />
     <Compile Include="ValidatorTests_Between.cs" />
     <Compile Include="ValidatorTests_Contains.cs" />
+    <Compile Include="ValidatorTests_EqualTo.cs" />
     <Compile Include="ValidatorTests_GreaterThan.cs" />
     <Compile Include="ValidatorTests_IsTrueIsFalse.cs" />
     <Compile Include="ValidatorTests_LesserThan.cs" />
+    <Compile Include="ValidatorTests_NotEqualTo.cs" />
     <Compile Include="ValidatorTests_NotNull.cs" />
     <Compile Include="ValidatorTests_IsNull.cs" />
     <Compile Include="ValidatorTests_NotBetween.cs" />

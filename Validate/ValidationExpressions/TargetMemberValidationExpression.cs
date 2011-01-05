@@ -55,6 +55,9 @@ namespace Validate.ValidationExpressions
 
         private string[] GetMethodAndMember()
         {
+            if(targetMemberExpression == null)
+                return new string[2] { "{{Target Type could not be determined, guessed as {0}}}".WithFormat(GetFriendlyTypeName(typeof(T))), "{{Target Member could not be determined}}" };
+
             if(targetMemberExpression.Body is MemberExpression)
             {
                 var me = (MemberExpression) targetMemberExpression.Body;
@@ -91,14 +94,6 @@ namespace Validate.ValidationExpressions
         protected virtual string GetTargetMemberName()
         {
             return GetMethodAndMember()[1];
-        }
-
-
-        protected virtual string GetValidationMessage()
-        {
-            var messageFormat = message.ToString();
-            var validationMessage = targetMemberExpression == null ? messageFormat.WithFormat(typeof(T).Name, "{{Target Member could not be determined}}") : messageFormat.WithFormat(GetTargetTypeName(), GetTargetMemberName());
-            return validationMessage;
         }
 
         private ValidationMethod<T> validationMethod;
