@@ -25,7 +25,7 @@ namespace Validate.ValidationExpressions
                                                                       v.AddError(new ValidationError(GetValidationMessage(), target, cause: GetValidationMessage()));
                                                                   return v;
                                                               };
-            return new ValidationMethod<T>(validation, GetValidationMessage(), GetMethodAndMember().Key, GetMethodAndMember().Value);
+            return new ValidationMethod<T>(validation, GetValidationMessage(), GetTargetTypeName(), GetTargetMemberName());
         }
     }
 }

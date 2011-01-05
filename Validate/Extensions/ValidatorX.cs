@@ -29,7 +29,7 @@ namespace Validate.Extensions
 
         public static Validator<T> IsNull<T, U>(this Validator<T> validator, Expression<Func<T, U>> selector, string message = null) where U : class
         {
-            var validationMessage = new ValidationMessage(message);
+            var validationMessage = message == null ? ValidationMessageRepository.Instance.GetValidationMessageForIsNull() : new ValidationMessage(message);
 
             var validationExpression = new IsNullTargetMemberExpression<T, U>(selector, validationMessage);
             return validationExpression.ValidationMethod.RunAgainst(validator);

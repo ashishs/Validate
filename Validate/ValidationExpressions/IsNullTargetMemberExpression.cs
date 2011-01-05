@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using Validate.Extensions;
 
 namespace Validate.ValidationExpressions
 {
@@ -17,10 +18,11 @@ namespace Validate.ValidationExpressions
                                                               {
                                                                   var target = compiledSelector(v.Target);
                                                                   if (target != null)
-                                                                      v.AddError(new ValidationError(GetValidationMessage(), target, cause: GetValidationMessage()));
+                                                                      v.AddError(new ValidationError(GetValidationMessage(), target, 
+                                                                                 cause: "{{The target member {0}.{1} was not null. Its value was {2}}}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), v.Target)));
                                                                   return v;
                                                               };
-            return new ValidationMethod<T>(validation, GetValidationMessage(), GetMethodAndMember().Key, GetMethodAndMember().Value);
+            return new ValidationMethod<T>(validation, GetValidationMessage(), GetTargetTypeName(), GetTargetMemberName());
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Validate.ValidationExpressions
                                                                       v.AddError(new ValidationError(GetValidationMessage(), target, cause: "The Enumerable did not contain values {{{0}}}".WithFormat(valuesNotContained.Select(val => val.ToString()).Join(" | "))));
                                                                   return v;
                                                               };
-            return new ValidationMethod<T>(validation, GetValidationMessage(), GetMethodAndMember().Key, GetMethodAndMember().Value);
+            return new ValidationMethod<T>(validation, GetValidationMessage(), GetTargetTypeName(), GetTargetMemberName());
         }
     }
 }

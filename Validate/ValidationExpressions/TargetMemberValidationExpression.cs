@@ -53,31 +53,51 @@ namespace Validate.ValidationExpressions
             return validators.SelectMany(v => v.Errors.Select(e => "{{{0}}}".WithFormat(e.Cause))).ToList();
         }
 
-        protected virtual KeyValuePair<string,string> GetMethodAndMember()
+        private string[] GetMethodAndMember()
         {
             if(targetMemberExpression.Body is MemberExpression)
             {
                 var me = (MemberExpression) targetMemberExpression.Body;
-                return new KeyValuePair<string, string>(me.Member.DeclaringType.Name, me.Member.Name);
+                return new string[2] { GetFriendlyTypeName(me.Member.DeclaringType), me.Member.Name };
             }
             else if(targetMemberExpression.Body is MethodCallExpression)
             {
                 var mce = (MethodCallExpression) targetMemberExpression.Body;
-                return new KeyValuePair<string, string>(mce.Object.Type.Name, mce.Method.Name);
+                return new string[2] { GetFriendlyTypeName(mce.Object.Type), mce.Method.Name };
             }
             else if (targetMemberExpression.Body is ParameterExpression)
             {
                 var pe = (ParameterExpression)targetMemberExpression.Body;
-                return new KeyValuePair<string, string>(pe.Type.Name, "Value");
+                return new string[2] { GetFriendlyTypeName(pe.Type), "Value" };
             }
             Trace.Write("Type information could not be auto discovered. Please specify the TargetType and TargetMember information.");
-            return new KeyValuePair<string, string>("{{Target Type could not be determined, guessed as {0}}}".WithFormat(typeof(T).Name), "{{Target Member could not be determined, guessed as {0}}}".WithFormat(targetMemberExpression.Body.ToString()));
+            return new string[2] { "{{Target Type could not be determined, guessed as {0}}}".WithFormat(GetFriendlyTypeName(typeof(T))), "{{Target Member could not be determined, guessed as {0}}}".WithFormat(targetMemberExpression.Body.ToString()) };
+        }
+
+        private string GetFriendlyTypeName(Type type)
+        {
+            if(type.IsGenericType)
+            {
+                return "{0}[{1}]".WithFormat(type.Name, type.GetGenericArguments().Select(t => t.Name).Join(", "));
+            }
+            return type.Name;
         }
         
+        protected virtual string GetTargetTypeName()
+        {
+            return GetMethodAndMember()[0];
+        }
+
+        protected virtual string GetTargetMemberName()
+        {
+            return GetMethodAndMember()[1];
+        }
+
+
         protected virtual string GetValidationMessage()
         {
             var messageFormat = message.ToString();
-            var validationMessage = targetMemberExpression == null ? messageFormat.WithFormat(typeof(T).Name, "{{Target Member could not be determined}}") : messageFormat.WithFormat(GetMethodAndMember().Key, GetMethodAndMember().Value);
+            var validationMessage = targetMemberExpression == null ? messageFormat.WithFormat(typeof(T).Name, "{{Target Member could not be determined}}") : messageFormat.WithFormat(GetTargetTypeName(), GetTargetMemberName());
             return validationMessage;
         }
 

@@ -7,6 +7,7 @@
         public int Goals { get; set; }
         public int Fouls { get; set; }
         public bool IsTrue { get; set; }
+        public Address HomeAddress { get; set; }
 
         #region Equality Members
         public bool Equals(Person other)
@@ -34,5 +35,17 @@
         {
             return string.Format("Name: {0}", Name);
         }
+    }
+
+    public class Address
+    {
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string AddressLine3 { get; set; }
+        public string AddressLine4 { get; set; }
+        public string City { get; set; }
+        public string StateOrCounty { get; set; }
+        public string Country { get; set; }
+        public string Zipcode { get; set; }
     }
 }
