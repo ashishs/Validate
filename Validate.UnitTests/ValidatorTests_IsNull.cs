@@ -21,6 +21,7 @@ namespace Validate.UnitTests
             List<string> values = new List<string>();
             var validator = values.Validate().IsNull(v => v, "Values should be null");
             Assert.IsFalse(validator.IsValid);
+            Assert.That(validator.Errors[0].Message, Is.EqualTo("Values should be null"));
         }
     }
 }

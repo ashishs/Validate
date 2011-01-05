@@ -40,7 +40,7 @@ namespace Validate
             Target = target;
             this._options = options ?? new ValidationOptions();
 
-            // TODO: Thik of a better way to do this
+            // TODO: Think of a better way to do this
             _options.ValidationResultToExceptionTransformer.Validator = this;
         }
 
