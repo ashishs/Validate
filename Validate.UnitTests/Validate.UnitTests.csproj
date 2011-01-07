@@ -44,10 +44,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Examples\ContactBuilder.cs" />
+    <Compile Include="Examples\Contract\ContactBuilder.cs" />
     <Compile Include="Examples\ContactValidator.cs" />
-    <Compile Include="Examples\Contract.cs" />
+    <Compile Include="Examples\Contract\Contract.cs" />
     <Compile Include="Examples\ValidationExamples_1.cs" />
+    <Compile Include="Examples\ValidationExamples_WritingCustomValidationExtensions.cs" />
+    <Compile Include="Examples\ValidationExamples_WritingCustomValidatorsForUseAsNestedValidators.cs" />
+    <Compile Include="Examples\ValidationExamples_WritingCustomValidatorsForUseAsNestedValidatorsWithoutUsingValidateExtensions.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="ValidationRepositoryFactoryTests.cs" />
     <Compile Include="ValidationRepositoryTests.cs" />

@@ -107,7 +107,7 @@ namespace Validate.Extensions
             return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> Or<T>(this Validator<T> validator, string message, params Func<T,Validator>[] nestedValidators)
+        public static Validator<T> Or<T>(this Validator<T> validator, string message, params Func<T,IValidator>[] nestedValidators)
         {
             var validationMessage = new ValidationMessage(message);
 
@@ -123,7 +123,7 @@ namespace Validate.Extensions
             return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> And<T>(this Validator<T> validator, string message, params Func<T, Validator>[] nestedValidators)
+        public static Validator<T> And<T>(this Validator<T> validator, string message, params Func<T, IValidator>[] nestedValidators)
         {
             var validationMessage = new ValidationMessage(message);
 
@@ -147,7 +147,7 @@ namespace Validate.Extensions
             return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IfThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Func<T, Validator>[] nestedValidators)
+        public static Validator<T> IfThen<T>(this Validator<T> validator, Predicate<T> ifThis, string message, params Func<T, IValidator>[] nestedValidators)
         {
             var validationMessage = new ValidationMessage(message);
 
@@ -163,7 +163,7 @@ namespace Validate.Extensions
             return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifNotThis, string message, params Func<T, Validator>[] nestedValidators)
+        public static Validator<T> IfNotThen<T>(this Validator<T> validator, Predicate<T> ifNotThis, string message, params Func<T, IValidator>[] nestedValidators)
         {
             var validationMessage = new ValidationMessage(message);
 
@@ -195,12 +195,12 @@ namespace Validate.Extensions
             return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
-        public static void Throw(this Validator validator)
+        public static void Throw(this IValidator validator)
         {
-            Func<Validator, Validator> validation = (v) =>
+            Func<IValidator, IValidator> validation = (v) =>
             {
                 if (!v.IsValid)
-                    v.ValidationResultToExceptionTransformer.Throw();
+                    v.Throw();
                 return v;
             };
 

@@ -76,8 +76,10 @@
     <Compile Include="ValidationRepository.cs" />
     <Compile Include="ValidationRepositoryFactory.cs" />
     <Compile Include="ValidationResultToExceptionTransformer.cs" />
-    <Compile Include="Validator.cs" />
+    <Compile Include="IValidator.cs" />
     <Compile Include="Extensions\ValidatorX.cs" />
+    <Compile Include="AbstractValidator.cs" />
+    <Compile Include="Validator.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

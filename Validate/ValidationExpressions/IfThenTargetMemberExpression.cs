@@ -8,10 +8,10 @@ namespace Validate.ValidationExpressions
     {
         private readonly Predicate<T>[] _predicates;
         private readonly Predicate<T> _ifThis;
-        private readonly Func<T, Validator>[] _nestedValidators;
+        private readonly Func<T, IValidator>[] _nestedValidators;
         private bool _useNestedValidators;
 
-        public IfThenTargetMemberExpression(Predicate<T> ifThis, ValidationMessage message, Func<T, Validator>[] nestedValidators)
+        public IfThenTargetMemberExpression(Predicate<T> ifThis, ValidationMessage message, Func<T, IValidator>[] nestedValidators)
             : base(message)
         {
             _ifThis = ifThis;

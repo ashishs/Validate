@@ -5,7 +5,7 @@
     /// </summary>
     public abstract class ValidationResultToExceptionTransformer
     {
-        public Validator Validator { get; internal set; }
+        public AbstractValidator Validator { get; internal set; }
 
         /// <summary>
         /// Override this method to specify custom validation exception behaviour.

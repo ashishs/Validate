@@ -13,7 +13,7 @@ namespace Validate.Extensions
         /// <returns>An instance of the Validator class</returns>
         public static Validator<T> Validate<T>(this T obj, ValidationOptions options = null)
         {
-            if (typeof(Validator).IsAssignableFrom(typeof(T)) || typeof(IValidationMetadata).IsAssignableFrom(typeof(T)))
+            if (typeof(AbstractValidator).IsAssignableFrom(typeof(T)) || typeof(IValidationMetadata).IsAssignableFrom(typeof(T)))
                 throw new InvalidOperationException("Validators/Validations cannot be validated using validate extensions.");
             
             return new Validator<T>(obj, options: options);

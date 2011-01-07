@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Validate;
 using Validate.Extensions;
+using Validate.UnitTests.Examples.Contract;
 
 namespace Validate.UnitTests.Examples
 {
@@ -16,7 +17,7 @@ namespace Validate.UnitTests.Examples
 
             // Check for first name and last name
             var validator = contact.Validate()
-                                   .IsNotNullOrEmpty(c => c.FirstName, "First name is mandatory.")
+                                   .IsNotNullOrEmpty(c => c.FirstName)
                                    .IsNotNullOrEmpty(c => c.LastName, "Last name is mandatory.");
             Assert.IsTrue(validator.IsValid);
             
@@ -24,9 +25,10 @@ namespace Validate.UnitTests.Examples
             contact.LastName = null;
             validator = contact.Validate()
                                .IsNotNullOrEmpty(c => c.FirstName, "First name is mandatory.")
-                               .IsNotNull(c => c.LastName, "Last name is mandatory.");
+                               .IsNotNull(c => c.LastName);
             Assert.IsFalse(validator.IsValid);
             Assert.IsNotEmpty(validator.Errors);
+            Assert.AreEqual("Contact.LastName should not be null.", validator.Errors[0].Message);
         }
         
         [Test]

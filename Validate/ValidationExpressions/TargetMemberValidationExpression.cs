@@ -48,7 +48,7 @@ namespace Validate.ValidationExpressions
             return ! (targetMemberExpression.Body is MemberExpression);
         }
 
-        protected virtual List<string> GetCauses(IEnumerable<Validator> validators)
+        protected virtual List<string> GetCauses(IEnumerable<IValidator> validators)
         {
             return validators.SelectMany(v => v.Errors.Select(e => "{{{0}}}".WithFormat(e.Cause))).ToList();
         }

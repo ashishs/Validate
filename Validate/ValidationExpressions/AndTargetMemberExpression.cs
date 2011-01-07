@@ -7,10 +7,10 @@ namespace Validate.ValidationExpressions
     public class AndTargetMemberExpression<T> : TargetMemberValidationExpression<T, object>
     {
         private readonly Predicate<T>[] _predicates;
-        private readonly Func<T, Validator>[] _nestedValidators;
+        private readonly Func<T, IValidator>[] _nestedValidators;
         private bool _useNestedValidators;
 
-        public AndTargetMemberExpression(ValidationMessage message, Func<T, Validator>[] nestedValidators)
+        public AndTargetMemberExpression(ValidationMessage message, Func<T, IValidator>[] nestedValidators)
             : base(message)
         {
             _nestedValidators = nestedValidators;
