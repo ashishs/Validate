@@ -71,6 +71,7 @@
     <Compile Include="ValidatorTests_NotNullOrEmpty.cs" />
     <Compile Include="ValidatorTests_NullOrEmpty.cs" />
     <Compile Include="ValidatorTests_OneOf.cs" />
+    <Compile Include="ValidatorTests_PassesSavedValidation.cs" />
     <Compile Include="ValidatorTests_RegexMatches.cs" />
   </ItemGroup>
   <ItemGroup>

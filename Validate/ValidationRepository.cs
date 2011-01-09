@@ -35,5 +35,10 @@ namespace Validate
             }
             throw new ArgumentException("Could not find any validation matching the given type and alias. | Type: {0} | Alias {1}".WithFormat(type.FullName, validationAlias));
         }
+
+        public void Reset()
+        {
+            _validations = new List<object>();
+        }
     }
 }

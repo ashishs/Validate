@@ -195,6 +195,14 @@ namespace Validate.Extensions
             return validationExpression.ValidationMethod.RunAgainst(validator);
         }
 
+        public static Validator<T> PassesSavedValidation<T,U>(this Validator<T> validator, Expression<Func<T, U>> selector, string validation, string message = null, IValidationRepository validationRepository = null)
+        {
+            var validationRepositoryToUse = validationRepository ??
+                                            new ValidationRepositoryFactory().GetValidationRepository();
+            var validationExpression = new PassesSavedValidation<T, U>(selector, validation, validationRepositoryToUse);
+            return validationExpression.ValidationMethod.RunAgainst(validator);
+        }
+
         public static void Throw(this IValidator validator)
         {
             Func<IValidator, IValidator> validation = (v) =>

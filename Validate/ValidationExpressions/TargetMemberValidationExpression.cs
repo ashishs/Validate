@@ -20,7 +20,7 @@ namespace Validate.ValidationExpressions
             VerifyValidationExpression();
         }
 
-        public TargetMemberValidationExpression(ValidationMessage message = null)
+        public TargetMemberValidationExpression(ValidationMessage message)
         {
             this.message = message;
         }
@@ -97,7 +97,7 @@ namespace Validate.ValidationExpressions
         }
 
         private ValidationMethod<T> validationMethod;
-        public ValidationMethod<T> ValidationMethod
+        public virtual ValidationMethod<T> ValidationMethod
         {
             get
             {
