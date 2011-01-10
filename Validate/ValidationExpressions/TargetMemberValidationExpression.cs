@@ -9,43 +9,43 @@ namespace Validate.ValidationExpressions
 {
     public abstract class TargetMemberValidationExpression<T,U>
     {
-        protected readonly Expression<Func<T, U>> targetMemberExpression;
-        protected readonly ValidationMessage message;
+        protected readonly Expression<Func<T, U>> TargetMemberExpression;
+        protected readonly ValidationMessage Message;
 
         public TargetMemberValidationExpression(Expression<Func<T,U>> targetMemberExpression, ValidationMessage message = null)
         {
-            this.targetMemberExpression = targetMemberExpression;
-            this.message = message;
+            this.TargetMemberExpression = targetMemberExpression;
+            this.Message = message;
 
-            VerifyValidationExpression();
+            VerifyValidationExpression(message, targetMemberExpression);
         }
 
         public TargetMemberValidationExpression(ValidationMessage message)
         {
-            this.message = message;
+            this.Message = message;
         }
 
-        protected virtual void VerifyValidationExpression()
+        protected virtual void VerifyValidationExpression(ValidationMessage message, Expression<Func<T, U>> expression)
         {
-            if (message == null && IsNotMemberExpression() && IsNotMethodCallExpression() && IsNotParameterExpression())
-                throw new InvalidValidationException("The validation expression does not point to a property, field or method.") { ValidationExpression = targetMemberExpression };
+            if (message == null && IsNotMemberExpression(expression) && IsNotMethodCallExpression(expression) && IsNotParameterExpression(expression))
+                throw new InvalidValidationException("The validation expression does not point to a property, field or method.") { ValidationExpression = expression };
         }
 
-        private bool IsNotParameterExpression()
+        private bool IsNotParameterExpression(LambdaExpression expression)
         {
-            var pe = targetMemberExpression.Body as ParameterExpression;
+            var pe = expression.Body as ParameterExpression;
             return pe == null || pe.Type != typeof (T);
         }
 
-        private bool IsNotMethodCallExpression()
+        private bool IsNotMethodCallExpression(LambdaExpression expression)
         {
-            var mce = targetMemberExpression.Body as MethodCallExpression;
+            var mce = expression.Body as MethodCallExpression;
             return mce == null || mce.Object == null || mce.Object.Type != typeof(T);
         }
 
-        private bool IsNotMemberExpression()
+        private bool IsNotMemberExpression(LambdaExpression expression)
         {
-            return ! (targetMemberExpression.Body is MemberExpression);
+            return !(expression.Body is MemberExpression);
         }
 
         protected virtual List<string> GetCauses(IEnumerable<IValidator> validators)
@@ -53,28 +53,28 @@ namespace Validate.ValidationExpressions
             return validators.SelectMany(v => v.Errors.Select(e => "{{{0}}}".WithFormat(e.Cause))).ToList();
         }
 
-        private string[] GetMethodAndMember()
+        private string[] GetMethodAndMember(LambdaExpression expression)
         {
-            if(targetMemberExpression == null)
+            if (expression == null)
                 return new string[2] { "{{Target Type could not be determined, guessed as {0}}}".WithFormat(GetFriendlyTypeName(typeof(T))), "{{Target Member could not be determined}}" };
 
-            if(targetMemberExpression.Body is MemberExpression)
+            if (expression.Body is MemberExpression)
             {
-                var me = (MemberExpression) targetMemberExpression.Body;
+                var me = (MemberExpression)expression.Body;
                 return new string[2] { GetFriendlyTypeName(me.Member.DeclaringType), me.Member.Name };
             }
-            else if(targetMemberExpression.Body is MethodCallExpression)
+            else if (expression.Body is MethodCallExpression)
             {
-                var mce = (MethodCallExpression) targetMemberExpression.Body;
+                var mce = (MethodCallExpression)expression.Body;
                 return new string[2] { GetFriendlyTypeName(mce.Object.Type), mce.Method.Name };
             }
-            else if (targetMemberExpression.Body is ParameterExpression)
+            else if (expression.Body is ParameterExpression)
             {
-                var pe = (ParameterExpression)targetMemberExpression.Body;
+                var pe = (ParameterExpression)expression.Body;
                 return new string[2] { GetFriendlyTypeName(pe.Type), "Value" };
             }
             Trace.Write("Type information could not be auto discovered. Please specify the TargetType and TargetMember information.");
-            return new string[2] { "{{Target Type could not be determined, guessed as {0}}}".WithFormat(GetFriendlyTypeName(typeof(T))), "{{Target Member could not be determined, guessed as {0}}}".WithFormat(targetMemberExpression.Body.ToString()) };
+            return new string[2] { "{{Target Type could not be determined, guessed as {0}}}".WithFormat(GetFriendlyTypeName(typeof(T))), "{{Target Member could not be determined, guessed as {0}}}".WithFormat(expression.Body.ToString()) };
         }
 
         private string GetFriendlyTypeName(Type type)
@@ -86,14 +86,14 @@ namespace Validate.ValidationExpressions
             return type.Name;
         }
         
-        protected virtual string GetTargetTypeName()
+        protected virtual string GetTargetTypeName(LambdaExpression expression)
         {
-            return GetMethodAndMember()[0];
+            return GetMethodAndMember(expression)[0];
         }
 
-        protected virtual string GetTargetMemberName()
+        protected virtual string GetTargetMemberName(LambdaExpression expression)
         {
-            return GetMethodAndMember()[1];
+            return GetMethodAndMember(expression)[1];
         }
 
         private ValidationMethod<T> validationMethod;

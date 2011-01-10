@@ -34,7 +34,7 @@ namespace Validate.ValidationExpressions
 
         public override ValidationMethod<T> GetValidationMethod()
         {
-            var validationMessage = message.Populate(targetType: GetTargetTypeName(), targetMember: GetTargetMemberName());
+            var validationMessage = Message.Populate(targetType: GetTargetTypeName(TargetMemberExpression), targetMember: GetTargetMemberName(TargetMemberExpression));
             if (_useNestedValidators)
             {
                 Func<Validator<T>, Validator<T>> validation = (v) =>
@@ -45,7 +45,7 @@ namespace Validate.ValidationExpressions
                                                                           var validators = _nestedValidators.Select(valFunc => valFunc(target)).ToList();
                                                                           if(validators.Any(val => !val.IsValid))
                                                                               v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target,
-                                                                                         "{{The IfThen validation for target member {0}.{1} with value {2} failed because {{{3}}} }}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), target, GetCauses(validators.Where(val => !val.IsValid)).Join(" "))));      
+                                                                                         "{{The IfThen validation for target member {0}.{1} with value {2} failed because {{{3}}} }}".WithFormat(GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression), target, GetCauses(validators.Where(val => !val.IsValid)).Join(" "))));      
                                                                       }
                                                                       return v;
                                                                   };
@@ -60,7 +60,7 @@ namespace Validate.ValidationExpressions
                                                                       {
                                                                           if (_predicates.Any(val => !val(target)))
                                                                               v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target,
-                                                                                         "{{The IfThen validation for target member {0}.{1} with value {2} failed because {{ At least one of the predicates failed. }} }}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), target)));      
+                                                                                         "{{The IfThen validation for target member {0}.{1} with value {2} failed because {{ At least one of the predicates failed. }} }}".WithFormat(GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression), target)));      
                                                                       }
                                                                       return v;
                                                                   };

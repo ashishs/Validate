@@ -19,17 +19,17 @@ namespace Validate.ValidationExpressions
 
         public override ValidationMethod<T> GetValidationMethod()
         {
-            var validationMessage = message.Populate(targetType: GetTargetTypeName(), targetMember: GetTargetMemberName(), targetValueMatchesRegex: _regexPattern);
-            var compiledSelector = targetMemberExpression.Compile();
+            var validationMessage = Message.Populate(targetType: GetTargetTypeName(TargetMemberExpression), targetMember: GetTargetMemberName(TargetMemberExpression), targetValueMatchesRegex: _regexPattern);
+            var compiledSelector = TargetMemberExpression.Compile();
             Func<Validator<T>, Validator<T>> validation = (v) =>
                                                               {
                                                                   var target = compiledSelector(v.Target);
                                                                   if (!Regex.IsMatch(target, _regexPattern, _regexOptions))
                                                                       v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target,
-                                                                                 cause: "{{The target member {0}.{1} with value {2} did not match pattern {3}.}}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), target, _regexPattern)));
+                                                                                 cause: "{{The target member {0}.{1} with value {2} did not match pattern {3}.}}".WithFormat(GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression), target, _regexPattern)));
                                                                   return v;
                                                               };
-            return new ValidationMethod<T>(validation, validationMessage, GetTargetTypeName(), GetTargetMemberName());
+            return new ValidationMethod<T>(validation, validationMessage, GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression));
         }
     }
 }

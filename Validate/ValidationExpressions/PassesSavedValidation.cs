@@ -17,7 +17,7 @@ namespace Validate.ValidationExpressions
 
         public override ValidationMethod<T> GetValidationMethod()
         {
-            var compiledSelector = targetMemberExpression.Compile();
+            var compiledSelector = TargetMemberExpression.Compile();
             Func<Validator<T>, Validator<T>> validation = (v) =>
                                                               {   
                                                                   var target = compiledSelector(v.Target);
@@ -30,7 +30,7 @@ namespace Validate.ValidationExpressions
                                                                   }
                                                                   return v;
                                                               };
-            return new ValidationMethod<T>(validation, null, GetTargetTypeName(), GetTargetMemberName());
+            return new ValidationMethod<T>(validation, null, GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression));
         }
     }
 }

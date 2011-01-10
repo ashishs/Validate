@@ -26,7 +26,7 @@ namespace Validate.ValidationExpressions
 
         public override ValidationMethod<T> GetValidationMethod()
         {
-            var validationMessage = message.Populate(targetType: GetTargetTypeName(), targetMember: GetTargetMemberName());
+            var validationMessage = Message.Populate(targetType: GetTargetTypeName(TargetMemberExpression), targetMember: GetTargetMemberName(TargetMemberExpression));
             if (_useNestedValidators)
             {
                 Func<Validator<T>, Validator<T>> validation = (v) =>
@@ -35,7 +35,7 @@ namespace Validate.ValidationExpressions
                     var match = validators.Any(val => val.IsValid);
                     if (!match)
                         v.AddError(new ValidationError(validationMessage.Populate(targetValue: v.Target).ToString(), v.Target, 
-                                    "{{The OR validation for target member {0}.{1} with value {2} failed because {{{3}}} }}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), v.Target, GetCauses(validators).Join(" And "))));      
+                                    "{{The OR validation for target member {0}.{1} with value {2} failed because {{{3}}} }}".WithFormat(GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression), v.Target, GetCauses(validators).Join(" And "))));      
                     return v;
                 };
                 return new ValidationMethod<T>(validation, validationMessage, typeof(T).Name, null);
@@ -47,7 +47,7 @@ namespace Validate.ValidationExpressions
                     var match = _predicates.Any(p => p(v.Target));
                     if (!match)
                         v.AddError(new ValidationError(validationMessage.Populate(targetValue: v.Target).ToString(), v.Target,
-                                                                                     "{{The OR validation for target member {0}.{1} with value {2} failed because {{ All of the predicates failed. }} }}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), v.Target)));      
+                                                                                     "{{The OR validation for target member {0}.{1} with value {2} failed because {{ All of the predicates failed. }} }}".WithFormat(GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression), v.Target)));      
                     return v;
                 };
                 return new ValidationMethod<T>(validation, validationMessage, typeof(T).Name, null);

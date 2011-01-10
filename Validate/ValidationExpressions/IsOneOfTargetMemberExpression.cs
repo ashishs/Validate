@@ -18,19 +18,19 @@ namespace Validate.ValidationExpressions
         public override ValidationMethod<T> GetValidationMethod()
         {
             var oneOfValuesToDisplay = _isOneOfValues.Select(val => val.ToString()).Join(" | ");
-            var validationMessage = message.Populate(targetType: GetTargetTypeName(), targetMember: GetTargetMemberName(), targetValueIsOneOf: oneOfValuesToDisplay);
-            var compiledSelector = targetMemberExpression.Compile();
+            var validationMessage = Message.Populate(targetType: GetTargetTypeName(TargetMemberExpression), targetMember: GetTargetMemberName(TargetMemberExpression), targetValueIsOneOf: oneOfValuesToDisplay);
+            var compiledSelector = TargetMemberExpression.Compile();
             Func<Validator<T>, Validator<T>> validation = (v) =>
                                                               {
                                                                   var target = compiledSelector(v.Target);
                                                                   if (!_isOneOfValues.Any(val => val.Equals(target)))
                                                                   {
                                                                       v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target, 
-                                                                                 cause: "{{ The target member {0}.{1} with value {2} was not found one of the given value(s) {{ {3} }} }}".WithFormat(GetTargetTypeName(), GetTargetMemberName(), target, oneOfValuesToDisplay)));
+                                                                                 cause: "{{ The target member {0}.{1} with value {2} was not found one of the given value(s) {{ {3} }} }}".WithFormat(GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression), target, oneOfValuesToDisplay)));
                                                                   }
                                                                   return v;
                                                               };
-            return new ValidationMethod<T>(validation, validationMessage, GetTargetTypeName(), GetTargetMemberName());
+            return new ValidationMethod<T>(validation, validationMessage, GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression));
         }
     }
 }

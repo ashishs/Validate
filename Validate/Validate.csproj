@@ -40,17 +40,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ValidatorXOtherMember.cs" />
     <Compile Include="ValidationExpressions\AndTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\ContainsTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IfNotThenTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IfThenTargetMemberExpression.cs" />
     <Compile Include="InvalidValidationException.cs" />
     <Compile Include="ValidationExpressions\IsBetweenTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsEqualToOtherMemberTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IsEqualToTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IsFalseTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsGreaterThanOtherMemberTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IsGreaterThanTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsLesserThanOtherMemberTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IsLesserThanTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IsNotBetweenTargetMemberExpression.cs" />
+    <Compile Include="ValidationExpressions\IsNotEqualToOtherMemberTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IsNotEqualToTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IsNotNullOrEmptyTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IsNotNullTargetMemberExpression.cs" />

@@ -11,6 +11,7 @@ namespace Validate.UnitTests
         public bool IsTrue { get; set; }
         public Address HomeAddress { get; set; }
         public IEnumerable<string> EmailAddresses { get; set; }
+        public string NickName { get; set; }
 
         #region Equality Members
         public bool Equals(Person other)
