@@ -52,7 +52,7 @@ namespace Validate.UnitTests.Examples
             contact.BusinessAddress.AddressLine1 = null;
             contactValidator = contact.ValidateUsing("Contact_Validation_Example");
             Assert.IsFalse(contactValidator.IsValid);
-            Assert.AreEqual("Business address is missing.", contactValidator.Errors[0].Message);
+            Assert.AreEqual(contactValidator.Errors[0].Message, "Business address is missing.");
             Assert.IsTrue(contactValidator.Errors[0].Cause.Contains("The target member Address.AddressLine1 was null or empty."));
 
         }

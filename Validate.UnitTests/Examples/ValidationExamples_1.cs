@@ -28,7 +28,7 @@ namespace Validate.UnitTests.Examples
                                .IsNotNull(c => c.LastName);
             Assert.IsFalse(validator.IsValid);
             Assert.IsNotEmpty(validator.Errors);
-            Assert.AreEqual("Contact.LastName should not be null.", validator.Errors[0].Message);
+            Assert.AreEqual(validator.Errors[0].Message, "Contact.LastName should not be null.");
         }
         
         [Test]

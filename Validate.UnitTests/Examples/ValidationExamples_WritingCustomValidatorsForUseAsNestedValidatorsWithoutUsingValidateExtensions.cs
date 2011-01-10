@@ -59,7 +59,7 @@ namespace Validate.UnitTests.Examples
                      c => new MyCustomAddressValidatorForUSAddresses(c.BusinessAddress)
                 );
             Assert.IsFalse(validator.IsValid);
-            Assert.AreEqual("Some validation failed.", validator.Errors[0].Message);
+            Assert.AreEqual(validator.Errors[0].Message, "Some validation failed.");
             Assert.IsTrue(validator.Errors[0].Cause.Contains("{ The address was null or the country was not US. }"));
         }
     }

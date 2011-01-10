@@ -63,7 +63,7 @@ namespace Validate.UnitTests.Examples.CustomValidationExtensions
             var values = new List<string> { "One", "Two", "Three" };
             var validator = values.Validate().IsLengthGreaterThan(v => v, 4);
             Assert.IsFalse(validator.IsValid);
-            Assert.AreEqual("List`1[String].Value had length greater than the speciefied value.", validator.Errors[0].Message);
+            Assert.AreEqual(validator.Errors[0].Message, "List`1[String].Value had length greater than the speciefied value.");
         }
     }
 }

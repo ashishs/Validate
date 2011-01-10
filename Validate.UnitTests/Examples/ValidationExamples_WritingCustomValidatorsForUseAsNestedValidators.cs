@@ -34,7 +34,7 @@ namespace Validate.UnitTests.Examples
                      c => new MyCustomAddressValidatorForUSAddresses(c.BusinessAddress)
                 );
             Assert.IsFalse(validator.IsValid);
-            Assert.AreEqual("Some validation failed.", validator.Errors[0].Message);
+            Assert.AreEqual(validator.Errors[0].Message, "Some validation failed.");
             Assert.IsTrue(validator.Errors[0].Cause.Contains("{{{The target member Address.Country with value Germany was not equal to US.}}}"));
         }
     }
