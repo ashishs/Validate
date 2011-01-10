@@ -40,7 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractClassValidator.cs" />
     <Compile Include="Extensions\ValidatorXOtherMember.cs" />
+    <Compile Include="ValidateUsingAttribute.cs" />
     <Compile Include="ValidationExpressions\AndTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\ContainsTargetMemberExpression.cs" />
     <Compile Include="ValidationExpressions\IfNotThenTargetMemberExpression.cs" />
