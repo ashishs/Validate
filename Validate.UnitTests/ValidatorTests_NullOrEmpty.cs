@@ -28,7 +28,7 @@ namespace Validate.UnitTests
         {
             List<string> values = new List<string> { "One" };
             var validator = values.Validate().IsNullOrEmpty(v => v);
-            Assert.That(validator.Errors[0].Message, Is.EqualTo("List`1[String].Value should be null or empty."));
+            Assert.That(validator.Errors[0].Message, Is.EqualTo("List`1[String].{{ Target member could not be determined }} should be null or empty."));
         }
 
         [Test]

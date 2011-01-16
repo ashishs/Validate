@@ -32,17 +32,17 @@ namespace Validate.UnitTests.Examples.CustomValidationExtensions
 
         public override ValidationMethod<T> GetValidationMethod()
         {
-            var validationMessage = Message.Populate(targetType: GetTargetTypeName(TargetMemberExpression), targetMember: GetTargetMemberName(TargetMemberExpression));
+            var validationMessage = Message.Populate(targetType: TargetMemberMetadata.Type.FriendlyName(), targetMember: TargetMemberMetadata.MemberName);
             var compiledSelector = TargetMemberExpression.Compile();
             Func<Validator<T>, Validator<T>> validation = (v) =>
             {
                 var target = compiledSelector(v.Target);
                 if (target == null || target.OfType<object>().Count() <= _lengthGreaterThan)
-                    v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target,
-                              "{{ The target member {0}.{1} did not have length greater than {2} }}".WithFormat(GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression), _lengthGreaterThan)));
+                    v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target, TargetMemberMetadata,
+                              "{{ The target member {0}.{1} did not have length greater than {2} }}".WithFormat(TargetMemberMetadata.Type.FriendlyName(), TargetMemberMetadata.MemberName, _lengthGreaterThan)));
                 return v;
             };
-            return new ValidationMethod<T>(validation, validationMessage, GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression));
+            return new ValidationMethod<T>(validation, validationMessage, TargetMemberMetadata);
         }
     }
 
@@ -63,7 +63,7 @@ namespace Validate.UnitTests.Examples.CustomValidationExtensions
             var values = new List<string> { "One", "Two", "Three" };
             var validator = values.Validate().IsLengthGreaterThan(v => v, 4);
             Assert.IsFalse(validator.IsValid);
-            Assert.AreEqual(validator.Errors[0].Message, "List`1[String].Value had length greater than the speciefied value.");
+            Assert.AreEqual(validator.Errors[0].Message, "List`1[String].{{ Target member could not be determined }} had length greater than the speciefied value.");
         }
     }
 }

@@ -16,17 +16,17 @@ namespace Validate.ValidationExpressions
 
         public override ValidationMethod<T> GetValidationMethod()
         {
-            var validationMessage = Message.Populate(targetType: GetTargetTypeName(TargetMemberExpression), targetMember: GetTargetMemberName(TargetMemberExpression), targetValueNotEqualTo: _notEqualTo);
+            var validationMessage = Message.Populate(targetType: TargetMemberMetadata.Type.FriendlyName(), targetMember: TargetMemberMetadata.MemberName, targetValueNotEqualTo: _notEqualTo);
             var compiledSelector = TargetMemberExpression.Compile();
             Func<Validator<T>, Validator<T>> validation = (v) =>
                                                               {
                                                                   var target = compiledSelector(v.Target);
                                                                   if (target.Equals(_notEqualTo))
-                                                                      v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target,
-                                                                                                     cause: "{{The target member {0}.{1} with value {2} was equal to {3}.}}".WithFormat(GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression), target, _notEqualTo)));
+                                                                      v.AddError(new ValidationError(validationMessage.Populate(targetValue: target).ToString(), target, TargetMemberMetadata,
+                                                                                                     cause: "{{The target member {0}.{1} with value {2} was equal to {3}.}}".WithFormat(TargetMemberMetadata.Type.FriendlyName(), TargetMemberMetadata.MemberName, target, _notEqualTo)));
                                                                   return v;
                                                               };
-            return new ValidationMethod<T>(validation, validationMessage, GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression));
+            return new ValidationMethod<T>(validation, validationMessage, TargetMemberMetadata);
         }
     }
 }

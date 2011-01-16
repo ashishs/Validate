@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Validate.Extensions
 {
@@ -37,6 +38,15 @@ namespace Validate.Extensions
         {
             var classValidator = (AbstractClassValidator<T>) Activator.CreateInstance(abstractClassValidator, obj);
             return classValidator.Validate();
+        }
+
+        public static string FriendlyName(this Type type)
+        {
+            if (type.IsGenericType)
+            {
+                return "{0}[{1}]".WithFormat(type.Name, type.GetGenericArguments().Select(t => t.Name).Join(", "));
+            }
+            return type.Name;
         }
     }
 }

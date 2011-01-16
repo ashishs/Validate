@@ -26,7 +26,7 @@ namespace Validate.ValidationExpressions
 
         public override ValidationMethod<T> GetValidationMethod()
         {
-            var validationMessage = Message.Populate(targetType: GetTargetTypeName(TargetMemberExpression), targetMember: GetTargetMemberName(TargetMemberExpression));
+            var validationMessage = Message.Populate(targetType: typeof(T).FriendlyName());
             if (_useNestedValidators)
             {
                 Func<Validator<T>, Validator<T>> validation = (v) =>
@@ -34,11 +34,11 @@ namespace Validate.ValidationExpressions
                                                                       var validators = _nestedValidators.Select(valFunc => valFunc(v.Target));
                                                                       var match = validators.All(val => val.IsValid);
                                                                       if (!match)
-                                                                          v.AddError(new ValidationError(validationMessage.Populate(targetValue: v.Target).ToString(), v.Target,
-                                                                                     "{{The AND validation for target member {0}.{1} with value {2} failed because {{{3}}} }}".WithFormat(GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression), v.Target, GetCauses(validators.Where(val => !val.IsValid)).Join(" And "))));      
+                                                                          v.AddError(new ValidationError(validationMessage.Populate(targetValue: v.Target).ToString(), v.Target, TargetMemberMetadata,
+                                                                                     "{{The AND validation for target member {0}.{1} with value {2} failed because {{{3}}} }}".WithFormat(typeof(T).FriendlyName(), "{{ Target member could not be determined }}", v.Target, GetCauses(validators.Where(val => !val.IsValid)).Join(" And "))));      
                                                                       return v;
                                                                   };
-                return new ValidationMethod<T>(validation, validationMessage, typeof(T).Name, null);
+                return new ValidationMethod<T>(validation, validationMessage, TargetMemberMetadata);
             }
             else
             {
@@ -46,11 +46,11 @@ namespace Validate.ValidationExpressions
                                                                   {
                                                                       var match = _predicates.All(p => p(v.Target));
                                                                       if (!match)
-                                                                          v.AddError(new ValidationError(validationMessage.Populate(targetValue: v.Target).ToString(), v.Target,
-                                                                                     "{{The AND validation for target member {0}.{1} with value {2} failed because {{ At least one of the predicates failed. }} }}".WithFormat(GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression), v.Target)));      
+                                                                          v.AddError(new ValidationError(validationMessage.Populate(targetValue: v.Target).ToString(), v.Target, TargetMemberMetadata,
+                                                                                     "{{The AND validation for target member {0}.{1} with value {2} failed because {{ At least one of the predicates failed. }} }}".WithFormat(typeof(T).FriendlyName(), "{{ Target member could not be determined }}", v.Target)));      
                                                                       return v;
                                                                   };
-                return new ValidationMethod<T>(validation, validationMessage, typeof(T).Name, null);
+                return new ValidationMethod<T>(validation, validationMessage, TargetMemberMetadata);
             }
         }
     }

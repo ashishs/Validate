@@ -30,7 +30,7 @@ namespace Validate.ValidationExpressions
                                                                   }
                                                                   return v;
                                                               };
-            return new ValidationMethod<T>(validation, null, GetTargetTypeName(TargetMemberExpression), GetTargetMemberName(TargetMemberExpression));
+            return new ValidationMethod<T>(validation, null, TargetMemberMetadata);
         }
     }
 }

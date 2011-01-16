@@ -53,6 +53,7 @@
     <Compile Include="Examples\ValidationExamples_WritingCustomValidatorsForUseAsNestedValidators.cs" />
     <Compile Include="Examples\ValidationExamples_WritingCustomValidatorsForUseAsNestedValidatorsWithoutUsingValidateExtensions.cs" />
     <Compile Include="Person.cs" />
+    <Compile Include="TargetMemberExpressionTests.cs" />
     <Compile Include="ValidateUsingAttributeTests.cs" />
     <Compile Include="ValidationRepositoryFactoryTests.cs" />
     <Compile Include="ValidationRepositoryTests.cs" />

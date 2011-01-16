@@ -13,7 +13,7 @@
         /// </summary>
         public string Cause { get; private set; }
 
-        public ValidationError(string message, object value, string cause = null)
+        public ValidationError(string message, object value, TargetMemberMetadata targetMemberMetadata, string cause = null)
         {
             Message = message;
             Value = value;

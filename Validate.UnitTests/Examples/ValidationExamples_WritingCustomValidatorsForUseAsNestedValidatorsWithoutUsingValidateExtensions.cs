@@ -26,7 +26,10 @@ namespace Validate.UnitTests.Examples
             private void ValidateAddress()
             {
                 if(_address != null && _address.Country.EqualsIgnoreCase("US"))
-                    _errors.Add(new ValidationError("This is not a valid US Address.", _address, cause: "{ The address was null or the country was not US. }"));
+                {
+                    var targetMemberMetadata = new TargetMemberMetadata(typeof(Address), typeof(Address).GetProperty("Country"), "Address.Country");
+                    _errors.Add(new ValidationError("This is not a valid US Address.", _address, targetMemberMetadata, cause: "{ The address was null or the country was not US. }"));
+                }
             }
 
             public bool IsValid

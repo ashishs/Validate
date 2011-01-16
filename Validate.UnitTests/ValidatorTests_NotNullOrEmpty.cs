@@ -29,7 +29,7 @@ namespace Validate.UnitTests
         {
             List<string> values = null;
             var validator = values.Validate().IsNotNullOrEmpty(v => v);
-            Assert.That(validator.Errors[0].Message, Is.EqualTo("List`1[String].Value should not be null or empty."));
+            Assert.That(validator.Errors[0].Message, Is.EqualTo("List`1[String].{{ Target member could not be determined }} should not be null or empty."));
         }
 
         [Test]
