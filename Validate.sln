@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validate", "Validate\Valida
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validate.UnitTests", "Validate.UnitTests\Validate.UnitTests.csproj", "{AE6FAED1-9C68-4671-9141-7A24897C3C8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validate.Mvc", "Validate.Mvc\Validate.Mvc.csproj", "{AA653B73-C776-4EF7-90A5-CF3E22A50CA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validate.Mvc.UnitTests", "Validate.Mvc.UnitTests\Validate.Mvc.UnitTests.csproj", "{EEC8C4A0-3DD7-46DC-83AB-2F827F40BE70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{AE6FAED1-9C68-4671-9141-7A24897C3C8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE6FAED1-9C68-4671-9141-7A24897C3C8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE6FAED1-9C68-4671-9141-7A24897C3C8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA653B73-C776-4EF7-90A5-CF3E22A50CA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA653B73-C776-4EF7-90A5-CF3E22A50CA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA653B73-C776-4EF7-90A5-CF3E22A50CA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA653B73-C776-4EF7-90A5-CF3E22A50CA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEC8C4A0-3DD7-46DC-83AB-2F827F40BE70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEC8C4A0-3DD7-46DC-83AB-2F827F40BE70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEC8C4A0-3DD7-46DC-83AB-2F827F40BE70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEC8C4A0-3DD7-46DC-83AB-2F827F40BE70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
