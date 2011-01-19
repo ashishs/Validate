@@ -1,0 +1,31 @@
+﻿@model Validate.Mvc.IntegrationTests.Models.AbstractContact
+
+<form action="SubmitContact_@(Model.GetType().Name.Last())" method="post" id="ContactForm">
+    <h1>Contact Form</h1>
+    <p>
+        @Html.ValidationSummary()
+    </p>
+    
+    <p>
+        <label for="FirstName" title="First Name">First Name</label>
+        @Html.EditorFor(m => m.FirstName)
+        @Html.ValidationMessageFor(m => m.FirstName)
+    </p>
+    <p>
+        <label for="LastName" title="First Name">Last Name</label>
+        @Html.EditorFor(m => m.LastName)
+        @Html.ValidationMessageFor(m => m.LastName)
+    </p>
+    <p>
+        <label for="BusinessEmail" title="First Name">Business Email</label>
+        @Html.EditorFor(m => m.BusinessEmail)
+        @Html.ValidationMessageFor(m => m.BusinessEmail)
+    </p>
+     <p>
+        @Html.LabelFor(m => m.CurrentJob.Title, "Job Title")
+        @Html.EditorFor(m => m.CurrentJob.Title)
+        @Html.ValidationMessageFor(m => m.CurrentJob.Title)
+    </p>
+    <input type="submit" value="Submit" />
+</form>
+

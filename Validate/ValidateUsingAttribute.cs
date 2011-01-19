@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using Validate.Extensions;
+using System.Linq;
 
 namespace Validate
 {
@@ -8,6 +10,11 @@ namespace Validate
     {
         private Type _abstractClassValidator;
         private string _validationAlias;
+
+        private static MethodInfo _validateUsingAbstractValidator = typeof(GenericX).GetMethods(BindingFlags.Public | BindingFlags.Static)
+                                                                    .Where(m => m.Name == "ValidateUsing" && m.GetParameters().Last().ParameterType == typeof(Type)).Single();
+        private static MethodInfo _validateUsingValidation = typeof(GenericX).GetMethods(BindingFlags.Public | BindingFlags.Static)
+                                                                    .Where(m => m.Name == "ValidateUsing" && m.GetParameters().Last().ParameterType == typeof(string)).Single();
 
         public ValidateUsingAttribute(string validationAlias)
         {
@@ -19,17 +26,32 @@ namespace Validate
             _abstractClassValidator = abstractClassValidator;
         }
 
-        public virtual Validator<T> Validate<T>(T target)
+        public virtual AbstractValidator Validate(object target, Type targetType)
         {
+            var info = typeof (GenericX).GetMethods().Select(m => new {m.Name, Parameters = m.GetParameters().ToList()});
             if (_abstractClassValidator != null)
-            {   
-                return target.ValidateUsing(_abstractClassValidator);
+            {
+                var method = GetValidateUsingClassValidatorMethodInfo(targetType);
+                return (AbstractValidator)method.Invoke(null, new[] { target, _abstractClassValidator });
             }
             if(_validationAlias != null)
             {
-                return target.ValidateUsing(_validationAlias);
+                var method = GetValidateUsingStringMethodInfo(targetType);
+                return (AbstractValidator) method.Invoke(null, new[] { target, _validationAlias });
             }
             throw new ArgumentException("One of AbstractClassValidator or ValidationAlias must be set.");
+        }
+
+        private MethodInfo GetValidateUsingStringMethodInfo(Type targetType)
+        {   
+            var genericMethod = _validateUsingValidation.MakeGenericMethod(new[] {targetType});
+            return genericMethod;
+        }
+
+        private MethodInfo GetValidateUsingClassValidatorMethodInfo(Type targetType)
+        {   
+            var genericMethod = _validateUsingAbstractValidator.MakeGenericMethod(new[] { targetType });
+            return genericMethod;
         }
     }
 }

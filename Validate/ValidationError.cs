@@ -7,7 +7,8 @@
     {
         public string Message { get; private set; }
         public object Value { get; private set; }
-        
+        public TargetMemberMetadata TargetMemberMetadata { get; private set; }
+
         /// <summary>
         /// The cause of the validation error.
         /// </summary>
@@ -17,6 +18,7 @@
         {
             Message = message;
             Value = value;
+            TargetMemberMetadata = targetMemberMetadata;
             Cause = cause ?? string.Empty;
         }
     }

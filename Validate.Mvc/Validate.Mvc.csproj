@@ -44,7 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributedModelValidator.cs" />
+    <Compile Include="AttributedModelValidatorProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TargetMemberMetadataX.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Validate\Validate.csproj">
+      <Project>{8F6A102A-7DFD-4876-9E07-0F798D1AA72D}</Project>
+      <Name>Validate</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -50,11 +50,11 @@ namespace Validate.UnitTests
             Assert.AreEqual(2, typeof(MyPerson).GetCustomAttributes(typeof(ValidateUsingAttribute), true).OfType<ValidateUsingAttribute>().Count());
             var person = new MyPerson {Name = "My Name", Age = 25};
             var validateUsingValidationAttribute = person.GetType().GetCustomAttributes(typeof (ValidateUsingAttribute), true).OfType<ValidateUsingAttribute>().First();
-            var validator = validateUsingValidationAttribute.Validate(person);
+            var validator = validateUsingValidationAttribute.Validate(person, typeof(MyPerson));
             Assert.IsTrue(validator.IsValid);
 
             var validateUsingClassValidatorAttribute = person.GetType().GetCustomAttributes(typeof(ValidateUsingAttribute), true).OfType<ValidateUsingAttribute>().Last();
-            validator = validateUsingClassValidatorAttribute.Validate(person);
+            validator = validateUsingClassValidatorAttribute.Validate(person, typeof(MyPerson));
             Assert.IsTrue(validator.IsValid);
         }
 
@@ -64,11 +64,11 @@ namespace Validate.UnitTests
             Assert.AreEqual(2, typeof(MyPerson).GetCustomAttributes(typeof(ValidateUsingAttribute), true).OfType<ValidateUsingAttribute>().Count());
             var inValidPerson = new MyPerson { Name = "My Name", Age = 15 };
             var validateUsingValidationAttribute = inValidPerson.GetType().GetCustomAttributes(typeof(ValidateUsingAttribute), true).OfType<ValidateUsingAttribute>().First();
-            var validator = validateUsingValidationAttribute.Validate(inValidPerson);
+            var validator = validateUsingValidationAttribute.Validate(inValidPerson, typeof(MyPerson));
             Assert.IsFalse(validator.IsValid);
 
             var validateUsingClassValidatorAttribute = inValidPerson.GetType().GetCustomAttributes(typeof(ValidateUsingAttribute), true).OfType<ValidateUsingAttribute>().Last();
-            validator = validateUsingClassValidatorAttribute.Validate(inValidPerson);
+            validator = validateUsingClassValidatorAttribute.Validate(inValidPerson, typeof(MyPerson));
             Assert.IsFalse(validator.IsValid);
         }
     }
